@@ -89,12 +89,12 @@ compile_and_install_postgres()
 	echo "done."
 
 	echo -n "compiling ... "
-	make -j 16 > /dev/null
+	make -j 16 1>make.log 2>make.error.log
 	[[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version" && exit 1
 	echo "done."
 
 	echo -n "installing ... "
-	make install > /dev/null
+	make install 1>make_install.log 2>make_install.error.log
 	[[ $? -ne 0 ]] && echo "ERRO: can not install PostgreSQL $version" && exit 1
 	echo "done."
 }
