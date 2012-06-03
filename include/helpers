@@ -69,7 +69,11 @@ extract_postgres()
 	pg_dest_dir=$pgvm_home/src
 
 	cd $pg_dest_dir
-	tar zxvf postgresql-$version.tar.gz || echo "ERRO: can not extract file 'postgresql-$version.tar.gz'" && exit 1
+
+	echo -n "extracting postgresql-$version.tar.gz ... "
+	tar zxvf postgresql-$version.tar.gz >/dev/null
+	[[ $? -ne 0 ]] && echo "ERRO: can not extract file 'postgresql-$version.tar.gz'" && exit 1
+	echo "done."
 }
 
 compile_and_install_postgres()
@@ -79,8 +83,20 @@ compile_and_install_postgres()
 
 	cd $pg_dest_dir
 	mkdir -p $pgvm_home/environments/$version
-	./configure --prefix=$pgvm_home/environments/$version
-	make -j 32 && make install
+
+	echo -n "configuring PostgreSQL Version: $version ... "
+	./configure --prefix=$pgvm_home/environments/$version --silent
+	echo "done."
+
+	echo -n "compiling ... "
+	make -j 16 > /dev/null
+	[[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version" && exit 1
+	echo "done."
+
+	echo -n "installing ... "
+	make install > /dev/null
+	[[ $? -ne 0 ]] && echo "ERRO: can not install PostgreSQL $version" && exit 1
+	echo "done."
 }
 
 create_symlinks()
