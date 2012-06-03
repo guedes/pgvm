@@ -3,6 +3,19 @@ PosstgreSQL Version Manager - pgvm
 
 PostgreSQL Version Manager, or simply `pgvm` is a tool to manage multiple PostgreSQL installations.
 
+Installation
+------------
+
+To install just type:
+
+    curl -s -L https://raw.github.com/guedes/pgvm/master/bin/pgvm-self-install | bash
+
+Then open a new terminal or type:
+
+    source ~/.bashrc
+
+and voila!
+
 Usage
 -----
 
