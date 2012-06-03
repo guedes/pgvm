@@ -25,5 +25,5 @@ source $pgvm_home/include/helpers
 
 action=$1
 
-[[ $# -eq 1 ]] && execute_action $@ || execute_action help
+[[ $# -ne 0 ]] && execute_action $@ || execute_action help
 

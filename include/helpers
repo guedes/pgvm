@@ -41,12 +41,53 @@ execute_action()
 	fi
 }
 
-raise_if_not_exists()
+get_postgres()
 {
-	if [ $# -eq 1 -a -e $1 ]
-	then
-		return true
-	else
-		echo "ERROR: $1 not exists!" && exit 1
-	fi
+	version=${1:-$version}
+	pg_dest_dir=$pgvm_home/src
+	pg_url=$(postgres_download_url $version)
+
+	mkdir -p $pg_dest_dir
+
+	cd $pg_dest_dir
+	echo -n "downloading '$pg_url', please be patient... "
+	curl $pg_url -z postgresql-$version.tar.gz     -o postgresql-$version.tar.gz --silent --location -C - 2>/dev/null
+	echo "done."
+	curl $pg_url.md5 -z postgresql-$version.tar.gz.md5 -o postgresql-$version.tar.gz.md5 --silent --location -C - 2>/dev/null
+
+	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
+	md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
+
+	[[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
+
+	echo "done."
+}
+
+extract_postgres()
+{
+	version=${1:-$version}
+	pg_dest_dir=$pgvm_home/src
+
+	cd $pg_dest_dir
+	tar zxvf postgresql-$version.tar.gz || echo "ERRO: can not extract file 'postgresql-$version.tar.gz'" && exit 1
+}
+
+compile_and_install_postgres()
+{
+	version=${1:-$version}
+	pg_dest_dir=$pgvm_home/src/postgresql-$version
+
+	cd $pg_dest_dir
+	mkdir -p $pgvm_home/environments/$version
+	./configure --prefix=$pgvm_home/environments/$version
+	make -j 32 && make install
+}
+
+create_symlinks()
+{
+	version=${1:-$version}
+	mkdir -p $pgvm_home/environments
+	rm -rf $pgvm_home/environments/current
+	ln -s $pgvm_home/environments/$version $pgvm_home/environments/current
+	builtin hash -r
 }

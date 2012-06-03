@@ -21,31 +21,14 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
-
-source $pgvm_home/include/sites
-
-usage()
-{
-	echo """
-Usage: pgvm install <version>
-
-  <version> is the postgres semantic version that
-            you want to install, a branch or a
-            commit hash from postgresql git repo.
-
-  Examples:
-           pgvm install 9.0.7
-           pgvm install 9.1.3
-           pgvm install master
-           pgvm install c89bdf7690
-"""
-}
-
-install()
+postgres_download_url()
 {
 	version=$1
-
-	get_postgres
-	extract_postgres
-	compile_and_install_postgres
+	echo "http://ftp.postgresql.org/pub/source/v$version/postgresql-$version.tar.gz"
 }
+
+postgres_version_url()
+{
+	echo http://www.postgresql.org/versions.rss
+}
+
