@@ -1,4 +1,4 @@
-PosstgreSQL Version Manager - pgvm
+PostgreSQL Version Manager - pgvm
 ==================================
 
 PostgreSQL Version Manager, or simply `pgvm` is a tool to manage multiple PostgreSQL installations.
