@@ -24,11 +24,12 @@ TODO
 * A PostgreSQL (un)installation task
 * A list task
 * A self installer
+*
 
 Origins
 -------
 
-`pgvm` was inspired by [rvm](https://rvm.beginrescueend.com), a Ruby Version Manager created by [Wayne E. Seguin](http://wayneseguin.us).
+`pgvm` was inspired by [rvm](https://rvm.beginrescueend.com), a Ruby enVironment Manager created by [Wayne E. Seguin](http://wayneseguin.us).
 
 
 Copyright and License
