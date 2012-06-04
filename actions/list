@@ -23,5 +23,22 @@
 
 list()
 {
-	echo "NOT IMPLEMENTED YET!"
+	echo "PostgreSQL Installed Version:"
+	echo
+
+	current=$(readlink $pgvm_home/environments/current)
+	is_current=""
+
+	ls -1 -d $pgvm_home/environments/*.*.* | while read path
+	do
+		[[ $current == $path ]] && is_current="=>"
+
+		postgres_executable=$path/bin/postgres
+		pg_config=$path/bin/pg_config
+
+		banner=$( ${pg_config} --version )
+		binary_info=$(file -e elf $postgres_executable | cut -d: -f2-)
+
+		printf "%3s %-18s [%s ]\n" "$is_current" "$banner" "$binary_info"
+	done
 }
