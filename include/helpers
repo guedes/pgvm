@@ -99,6 +99,13 @@ compile_and_install_postgres()
 	echo "done."
 }
 
+version_is_installed()
+{
+	version=${1:-$version}
+
+	[[ -d "${pgvm_home}/environments/$version" ]]
+}
+
 create_symlinks()
 {
 	version=${1:-$version}

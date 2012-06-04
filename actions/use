@@ -21,34 +21,8 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
-usage()
+use()
 {
-	echo """
-Usage: pgvm action [arguments]
-
-  - actions:
-
-    install      Installs a specific PostgreSQL version
-    uninstall    Uninstalls a specific PostgreSQL version
-
-    list         List all installed PostgreSQL versions
-    use          Choose an enviroment to use
-
-    help         This help
-"""
-}
-
-help()
-{
-	action=$1
-	if [ $# -eq 0 ]
-	then
-		usage
-	elif action_exists $action
-	then
-		source $pgvm_home/actions/$action
-		usage
-	else
-		echo "ERROR: Action '$action' does not exists!"
-	fi
+	version=$1
+	[[ "$version" != "" ]] && version_is_installed $version && create_symlinks || exit
 }

@@ -28,6 +28,7 @@ Usage
       uninstall    Uninstalls a specific PostgreSQL version
 
       list         List all installed PostgreSQL versions
+      use          Choose an enviroment to use
 
       help         This help
 
