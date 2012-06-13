@@ -16,6 +16,13 @@ Then open a new terminal or type:
 
 and voila!
 
+
+Depends
+-------
+
+If to get PostgreSQL trunk version, you need git to pgvm take of repository git.
+
+
 Usage
 -----
 

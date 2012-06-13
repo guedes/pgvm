@@ -23,12 +23,11 @@
 
 list()
 {
-	echo "PostgreSQL Installed Version:"
-	echo
+	echo -e "PostgreSQL Installed Version:\n"
 
 	current=$(readlink $pgvm_home/environments/current)
 
-	ls -1 -d $pgvm_home/environments/*.*.* | while read path
+	ls -1 -d $pgvm_home/environments/*.*.* 2> /dev/null | while read path
 	do
 		is_current=""
 		[[ $current == $path ]] && is_current="=>"
