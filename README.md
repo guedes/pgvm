@@ -27,7 +27,7 @@ Depends
   * `gmake`
   * `readline`
   * `zlib`
-  * `git` in order to get PostgreSQL trunk version
+  * `git` in order to get PostgreSQL trunk version.
 
 Usage
 -----
