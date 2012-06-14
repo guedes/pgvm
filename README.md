@@ -20,8 +20,14 @@ and voila!
 Depends
 -------
 
-If to get PostgreSQL trunk version, you need git to pgvm take of repository git.
-
+  `pvgm` has the following dependenies: 
+  
+  * `bash`
+  * `c compiler`
+  * `gmake`
+  * `readline`
+  * `zlib`
+  * `git` in order to get PostgreSQL trunk version
 
 Usage
 -----
@@ -45,7 +51,7 @@ TODO
 * A PostgreSQL (un)installation task
 * A list task
 * A self installer
-*
+
 
 Origins
 -------
