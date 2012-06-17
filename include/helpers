@@ -108,8 +108,15 @@ version_is_installed()
 
 create_symlinks()
 {
+	check_env
+
 	version=${1:-$version}
 	mkdir --parents $pgvm_home/environments
 	ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
 	builtin hash -r
+}
+
+check_env()
+{
+	[[ -z $pgvm_home ]] && echo "\$pgvm_home is not set!" && exit 1
 }
