@@ -14,20 +14,8 @@ Then open a new terminal or type:
 
     source ~/.bashrc
 
-and voila!
+and voilà!
 
-
-Depends
--------
-
-  `pvgm` has the following dependenies:
-
-  * `bash`
-  * `c compiler`
-  * `gmake`
-  * `readline`
-  * `zlib`
-  * `git` in order to get PostgreSQL trunk version.
 
 Usage
 -----
@@ -45,54 +33,75 @@ Usage
 
       help         This help
 
+
 An example session
 ------------------
 
-    ~$ pgvm
+	~$ pgvm install 9.1.4
+    downloading 'http://ftp.postgresql.org/pub/source/v9.1.4/postgresql-9.1.4.tar.gz', please be patient... done.
+    checking 'postgresql-9.1.4.tar.gz' integrity... done.
+    extracting postgresql-9.1.4.tar.gz ... done.
+    configuring PostgreSQL Version: 9.1.4 ... done.
+    compiling ... done.
+    installing ... done.
 
-    Usage: pgvm action [arguments]
+    ~$ MAKE_OPTS="-j 16" CONFIG_OPTS="--enable-cassert" pgvm install 8.4.11
+    downloading 'http://ftp.postgresql.org/pub/source/v8.4.11/postgresql-8.4.11.tar.gz', please be patient... done.
+    checking 'postgresql-8.4.11.tar.gz' integrity... done.
+    extracting postgresql-8.4.11.tar.gz ... done.
+    configuring PostgreSQL Version: 8.4.11 ... done.
+    compiling ... done.
+    installing ... done.
 
-      - actions:
-
-        install      Installs a specific PostgreSQL version
-        uninstall    Uninstalls a specific PostgreSQL version
-
-        list         List all installed PostgreSQL versions
-        use          Choose an enviroment to use
-
-        help         This help
-
+    ~$ pgvm use 9.1.4
     ~$ pgvm list
     PostgreSQL Installed Version:
 
         PostgreSQL 8.4.11  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-     => PostgreSQL 9.1.3   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
+     => PostgreSQL 9.1.4   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
 
     ~$ pgvm current
-    9.1.3
+    9.1.4
 
     ~$ pgvm use 8.4.11
     ~$ pgvm current
     8.4.11
 
+    ~$ pg_config --configure --version
+    '--prefix=/home/user/.pgvm/environments/8.4.11' '--enable-cassert'
+    PostgreSQL 8.4.11
+
     ~$ psql --version
     psql (PostgreSQL) 8.4.11
     contains support for command-line editing
 
-    ~$ pgvm use 9.1.3
+    ~$ pgvm use 9.1.4
     ~$ pgvm current
-    9.1.3
+    9.1.4
 
     ~$ psql --version
-    psql (PostgreSQL) 9.1.3
+    psql (PostgreSQL) 9.1.4
     contains support for command-line editing
+
+
+Dependencies
+------------
+
+  `pvgm` has the following dependencies:
+
+  * `bash`
+  * `curl`
+  * `c compiler`
+  * `gmake`
+  * `readline`
+  * `zlib`
+  * `git` in order to get PostgreSQL trunk version.
+
 
 TODO
 ----
 
-* A PostgreSQL (un)installation task
-* A list task
-* A self installer
+See the [issue list of enhancements](https://github.com/guedes/pgvm/issues?labels=enhancement&page=1&state=open).
 
 
 Origins

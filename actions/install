@@ -38,6 +38,13 @@ Usage: pgvm install <version>
            pgvm install 9.1.3
            pgvm install master
            pgvm install c89bdf7690
+
+  You can pass MAKE_OPTS and CONFIG_OPTS for
+  'make' and 'configure' respectively
+
+  Examples:
+           CONFIG_OPTS="--enable-cassert" MAKE_OPTS="-j 16" pgvm install 9.1.4
+
 """
 }
 
