@@ -16,6 +16,19 @@ Then open a new terminal or type:
 
 and voila!
 
+
+Depends
+-------
+
+  `pvgm` has the following dependenies: 
+  
+  * `bash`
+  * `c compiler`
+  * `gmake`
+  * `readline`
+  * `zlib`
+  * `git` in order to get PostgreSQL trunk version.
+
 Usage
 -----
 
@@ -38,7 +51,7 @@ TODO
 * A PostgreSQL (un)installation task
 * A list task
 * A self installer
-*
+
 
 Origins
 -------
