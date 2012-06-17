@@ -21,8 +21,29 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+usage()
+{
+	echo """
+Select a specific version of PostgreSQL to use.
+
+Usage: pgvm use X.Y.Z
+
+where X.Y.Z is the semantic version of a installed PostgreSQL
+
+E.g.
+   ~$ pgvm use 9.1.4
+
+TIP: you can use 'pgvm list' to see the PostgreSQL
+     installations available.
+"""
+}
+
 use()
 {
 	version=$1
-	[[ "$version" != "" ]] && version_is_installed $version && create_symlinks || exit
+	[[ "x$version" == "x" ]] && usage && exit
+
+	version_is_installed $version && create_symlinks || exit
+
+	echo "switched to $version"
 }
