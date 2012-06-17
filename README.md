@@ -20,8 +20,8 @@ and voila!
 Depends
 -------
 
-  `pvgm` has the following dependenies: 
-  
+  `pvgm` has the following dependenies:
+
   * `bash`
   * `c compiler`
   * `gmake`
@@ -44,6 +44,48 @@ Usage
       use          Choose an enviroment to use
 
       help         This help
+
+An example session
+------------------
+
+    ~$ pgvm
+
+    Usage: pgvm action [arguments]
+
+      - actions:
+
+        install      Installs a specific PostgreSQL version
+        uninstall    Uninstalls a specific PostgreSQL version
+
+        list         List all installed PostgreSQL versions
+        use          Choose an enviroment to use
+
+        help         This help
+
+    ~$ pgvm list
+    PostgreSQL Installed Version:
+
+        PostgreSQL 8.4.11  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
+     => PostgreSQL 9.1.3   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
+
+    ~$ pgvm current
+    9.1.3
+
+    ~$ pgvm use 8.4.11
+    ~$ pgvm current
+    8.4.11
+
+    ~$ psql --version
+    psql (PostgreSQL) 8.4.11
+    contains support for command-line editing
+
+    ~$ pgvm use 9.1.3
+    ~$ pgvm current
+    9.1.3
+
+    ~$ psql --version
+    psql (PostgreSQL) 9.1.3
+    contains support for command-line editing
 
 TODO
 ----
