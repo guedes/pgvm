@@ -24,19 +24,15 @@
 list()
 {
 
-VERSIONS=$(ls -1 -d $pgvm_home/environments/*.*.* 2> /dev/null)
+	VERSIONS=$(ls -1 -d $pgvm_home/environments/*.*.* 2> /dev/null)
 
-if [ -z $VERSIONS ] 
-then
-	echo -e "Please, Install a PostgreSQL Version!\n"
-	exit 0
-else
+	[[ -z $VERSIONS ]] && echo -e "Please, install a PostgreSQL Version!\n" && exit 0
 
 	echo -e "PostgreSQL Installed Version:\n"
 
 	current=$(readlink $pgvm_home/environments/current)
 
-	echo $VERSIONS | while read path
+	for path in ${VERSIONS}
 	do
 		is_current=""
 		[[ $current == $path ]] && is_current="=>"
@@ -47,7 +43,6 @@ else
 		banner=$( ${pg_config} --version )
 		binary_info=$(file -e elf $postgres_executable | cut -d: -f2-)
 
-		printf "%3s %-18s [%s ]\n" "$is_current" "$banner" "$binary_info" 
+		printf "%3s %-18s [%s ]\n" "$is_current" "$banner" "$binary_info"
 	done
-fi
 }

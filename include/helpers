@@ -109,8 +109,7 @@ version_is_installed()
 create_symlinks()
 {
 	version=${1:-$version}
-	mkdir -p $pgvm_home/environments
-	rm -rf $pgvm_home/environments/current
-	ln -s $pgvm_home/environments/$version $pgvm_home/environments/current
+	mkdir --parents $pgvm_home/environments
+	ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
 	builtin hash -r
 }
