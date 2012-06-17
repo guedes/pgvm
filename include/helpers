@@ -79,18 +79,21 @@ extract_postgres()
 compile_and_install_postgres()
 {
 	version=${1:-$version}
+	configure_options=${CONFIG_OPTS}
+	make_options=${MAKE_OPTS}
+
 	pg_dest_dir=$pgvm_home/src/postgresql-$version
 
 	cd $pg_dest_dir
 	mkdir -p $pgvm_home/environments/$version
 
 	echo -n "configuring PostgreSQL Version: $version ... "
-	./configure --prefix=$pgvm_home/environments/$version --silent
+	./configure --prefix=$pgvm_home/environments/$version ${configure_options} --silent
 	echo "done."
 
 	echo -n "compiling ... "
-	make -j 16 1>make.log 2>make.error.log
-	[[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version" && exit 1
+	make ${make_options} 1>make.log 2>make.error.log
+	[[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version, see make.error.log for details." && exit 1
 	echo "done."
 
 	echo -n "installing ... "
