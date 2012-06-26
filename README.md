@@ -83,6 +83,12 @@ An example session
     psql (PostgreSQL) 9.1.4
     contains support for command-line editing
 
+    ~$ pgvm dataset create test
+    initializing dataset in '/home/user/.pgvm/datasets/9.1.4/test'... ok!
+
+    ~$ pg_ctl -D /home/user/.pgvm/datasets/9.1.4/test start
+    server starting
+
 
 Dependencies
 ------------

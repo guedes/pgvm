@@ -28,7 +28,7 @@ usage()
 	echo """
 Manipulates datasets within pgvm.
 
-Usage: pgvm gemset <action> <args>
+Usage: pgvm dataset <action> <args>
 
   - action
 
@@ -44,17 +44,30 @@ Usage: pgvm gemset <action> <args>
 
 dataset()
 {
-	dataset_name=${1:-"default"}
-	create $dataset_name
+	action=$1		; shift
+
+	[[ -z "$action" ]] && usage && exit 1
+
+	$action $@
 }
 
 create()
 {
-	dataset_name=${1:-"default"}
-	dataset_dir="$pgvm_home/datasets/$(current)/${dataset_name}"
+	dataset_name=$1 ; shift
 
-	[[ -d dataset_dir ]] && echo "dataset '$dataset_name' already exists!" && exit 1
+	[[ -z "$dataset_name" ]] && echo "please, choose a name for dataset!" && exit 1
 
-	mkdir --parents $dataset_dir
-	$pgvm_home/environments/current/bin/initdb -D $dataset_dir
+	dataset_top_dir="$pgvm_home/datasets/$(current)"
+	dataset_dir="${dataset_top_dir}/${dataset_name}"
+
+	[[ -d "$dataset_dir" ]] && echo "dataset '${dataset_dir}' already exists!" && exit 1
+
+	mkdir --parents $dataset_top_dir
+
+	echo -n "initializing dataset in '$dataset_dir'... "
+	$pgvm_home/environments/current/bin/initdb -D $dataset_dir 1> $dataset_top_dir/install.$dataset_name.log 2>$dataset_top_dir/install.$dataset_name.error.log
+
+	[[ $? -ne 0 ]] && echo "error!" && cat $dataset_dir/install.error.log
+
+	echo "ok!"
 }
