@@ -86,7 +86,7 @@ An example session
     ~$ pgvm dataset create test
     initializing dataset in '/home/user/.pgvm/datasets/9.1.4/test'... ok!
 
-    ~$ $ pg_ctl -D /home/guedes/.pgvm/datasets/9.1.4/test start
+    ~$ pg_ctl -D /home/user/.pgvm/datasets/9.1.4/test start
     server starting
 
 
