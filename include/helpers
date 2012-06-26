@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+A#!/usr/bin/env bash
 
 # Copyright (c) 2012 Dickson S. Guedes.
 #
@@ -51,26 +51,16 @@ get_postgres()
 
 	cd $pg_dest_dir
 	echo -n "downloading '$pg_url', please be patient... "
-	
-	pgdwd=$(curl -w %{http_code} $pg_url -I --silent -o /dev/null )
+	curl $pg_url -z postgresql-$version.tar.gz     -o postgresql-$version.tar.gz --silent --location -C - 2>/dev/null
+	echo "done."
+	curl $pg_url.md5 -z postgresql-$version.tar.gz.md5 -o postgresql-$version.tar.gz.md5 --silent --location -C - 2>/dev/null
 
-	if [ $pgdwd == 200   ]
-	then
+	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
+	md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
 
-		curl $pg_url  -o postgresql-$version.tar.gz --silent --location -C - 2>/dev/null
-		echo "done."
-		curl $pg_url.md5 -z postgresql-$version.tar.gz.md5 -o postgresql-$version.tar.gz.md5 --silent --location -C - 2>/dev/null
+	[[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
 
-		echo -n "checking 'postgresql-$version.tar.gz' integrity... "
-		md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
-
-		[[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
-
-		echo "done."
-	else
-		echo -n -e "\nVersion isn't avaliable, try other version!\n"
-		exit 0 
-	fi
+	echo "done."
 }
 
 extract_postgres()
