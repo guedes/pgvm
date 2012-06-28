@@ -21,7 +21,24 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+LS=$(which ls)
+#find $pgvm_home/environments/* -maxdepth 0 -type d
+
+
+
 uninstall()
 {
-	echo "NOT IMPLEMENTED YET!"
+	VERSIONS=$($LS -1 $pgvm_home/environments/ 2> /dev/null)
+	
+	echo -e "Removing Postgres installed by PGVM!\n"
+	for i in $VERSIONS
+	do
+		if [ -n $i  ]
+		then
+		   	echo -e "	$i\n"
+			rm -rf $pgvm_home/environments/$i
+		fi
+    done	
+
+		  
 }
