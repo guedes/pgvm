@@ -56,7 +56,9 @@ get_postgres()
 	curl $pg_url.md5 -z postgresql-$version.tar.gz.md5 -o postgresql-$version.tar.gz.md5 --silent --location -C - 2>/dev/null
 
 	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
-	md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
+	MD5SUM="md5sum -c"
+	command -v gmd5sum >/dev/null 2>&1 && { MD5SUM="gmd5sum -c" }
+	$MD5SUM postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
 
 	[[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
 
@@ -114,8 +116,8 @@ create_symlinks()
 	check_env
 
 	version=${1:-$version}
-	mkdir --parents $pgvm_home/environments
-	ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
+	mkdir -p $pgvm_home/environments
+	ln -f -s $pgvm_home/environments/$version $pgvm_home/environments/current
 	builtin hash -r
 }
 
