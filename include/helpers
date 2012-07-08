@@ -123,3 +123,4 @@ check_env()
 {
 	[[ -z $pgvm_home ]] && echo "\$pgvm_home is not set!" && exit 1
 }
+

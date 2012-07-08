@@ -21,7 +21,103 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+LS=$(which ls)
+
+usage()
+{
+cat << EOF
+
+Usage: pgvm uninstall [OPTIONS] <version>
+
+  <version> is the postgres semantic version that
+            you want to uninstall.
+
+  Examples:
+           pgvm uninstall 9.0.7
+           pgvm uninstall 9.1.3
+           pgvm uninstall master
+           pgvm uninstall --all
+           pgvm uninstall --purge 9.1.1
+           pgvm uninstall --purge --all
+
+
+== Options
+
+
+  --purge	Remove postgres version source and installed.
+
+  --all		Remove all postgres versions installed.
+
+  --purge --all	Remove all postgres versions installed 
+            	 and all versions source code.
+
+EOF
+}
+
+
+purge()
+{
+
+if [ -z $TARGET2 ] 
+then
+	echo -n -e "Choose a Postgres version to purge or check the options.\n"
+	break
+elif [ $TARGET2 == "--all" ]
+then
+	echo -e "Removing the following Postgres versions sources and installed by pgvm!\n"
+	echo -e "$VERSIONS"
+	rm -rf $pgvm_home/environments/*
+	rm -rf $pgvm_home/src/*
+	break
+elif [ $TARGET2 == "$i" ] || [ -d $pgvm_home/src/postgresql-$TARGET2 ]
+then
+	echo -e "Removing Postgres version $i installed and your source by pgvm!\n"
+	rm -rf $pgvm_home/environments/$TARGET2
+	rm -rf $pgvm_home/src/postgresql-$TARGET2*
+	break
+else
+	usage
+	break
+fi
+}
+
+
+
 uninstall()
 {
-	echo "NOT IMPLEMENTED YET!"
+	VERSIONS=$($LS -1 $pgvm_home/environments/ 2> /dev/null)
+	SOURCES=$($LS -1 $pgvm_home/src/ 2> /dev/null)
+	TARGET1=$1
+	TARGET2=$2
+
+	for i in $VERSIONS
+	do  
+		if [ -z $TARGET1 ]
+ 		then
+			echo -n -e "Choose a Postgres version to remove or check the options.\n"
+			usage
+			break
+		
+		elif [ $TARGET1 == "--all" ]
+		then
+			echo -e "Removing the following Postgres versions installed by pgvm!\n"
+		   	echo -e "$VERSIONS\n"
+			rm -rf $pgvm_home/environments/*
+		    break	
+		elif [ $TARGET1 == "--purge" ]
+		then
+			purge
+			break
+		elif [ $TARGET1  == $i  ]
+		then
+			echo -e "Removing Postgres version $i installed by pgvm!\n"
+			rm -rf $pgvm_home/environments/$i
+			break
+		else
+			usage
+			break
+		fi
+    done	
+
+		  
 }
