@@ -71,3 +71,14 @@ create()
 
 	echo "ok!"
 }
+
+list()
+{
+	dataset_top_dir="$pgvm_home/datasets/$(current)"
+	datasets=$(find ${dataset_top_dir}/* -maxdepth 0 -type d -exec basename {} \; 2> /dev/null)
+
+	for dataset in ${datasets}
+	do
+		echo "$dataset"
+	done
+}
