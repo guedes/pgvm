@@ -37,10 +37,10 @@ Usage: pgvm uninstall <version> [OPTIONS]
   Examples:
            pgvm uninstall 9.0.7
            pgvm uninstall 9.1.3
-           pgvm uninstall master
+           pgvm uninstall 9.1.1 --purge
            pgvm uninstall --all
-           pgvm uninstall --purge 9.1.1
-           pgvm uninstall --purge --all
+           pgvm uninstall --all --purge
+           pgvm uninstall master
 
 
 == Options
