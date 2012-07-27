@@ -21,7 +21,124 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+source $pgvm_home/actions/current
+
+LS=$(which ls)
+
+usage()
+{
+cat << EOF
+
+Usage: pgvm uninstall <version> [OPTIONS]
+
+  <version> is the postgres semantic version that
+            you want to uninstall.
+
+  Examples:
+           pgvm uninstall 9.0.7
+           pgvm uninstall 9.1.3
+           pgvm uninstall master
+           pgvm uninstall --all
+           pgvm uninstall --purge 9.1.1
+           pgvm uninstall --purge --all
+
+
+== Options
+
+
+  --all		Remove all postgres versions installed.
+
+  --purge	Remove postgres version source.
+
+  --force	If is the current version then remove it.
+
+EOF
+}
+
+
+remove()
+{
+  version=$1
+  purge=$2
+  force=$3
+
+  if [ -z $version ]
+  then
+    echo -n -e "Choose a Postgres version to remove or check the options.\n"
+	  break
+  elif [ $version == "--all" ]
+  then
+	  echo -e "Removing the following Postgres versions sources and installed by pgvm!\n"
+	  echo -e "$VERSIONS"
+	  rm -rf $pgvm_home/environments/*
+    if [ $purge -eq 1 ]
+    then
+	    rm -rf $pgvm_home/src/*
+    fi
+	  break
+  elif [ -d $pgvm_home/src/postgresql-$version ]
+  then
+
+    current=$(current)
+    if [ $current == $version ] && [ $force -eq 1  ]
+    then
+      rm -f $pgvm_home/environments/current
+    elif [ $current == $version ] && [ $force -eq 0 ]
+    then
+      echo -e "You try to remove the current $current version. Use the --force to remove it!\n"
+      break
+    fi
+
+	  echo -e "Removing Postgres version $version installed and your source by pgvm!\n"
+    rm -rf $pgvm_home/environments/$version
+
+    if [ $purge -eq 1 ]
+    then
+      rm -rf $pgvm_home/src/postgresql-$version*
+	  fi
+    break
+  else
+	  usage
+    break
+  fi
+}
+
+
+
 uninstall()
 {
-	echo "NOT IMPLEMENTED YET!"
+	VERSIONS=$($LS -1 $pgvm_home/environments/ 2> /dev/null)
+	SOURCES=$($LS -1 $pgvm_home/src/ 2> /dev/null)
+
+  version=$1
+  shift
+
+  force=0
+  purge=0
+
+  for p in $*
+  do
+    if [ $p == "--purge" ]
+    then
+      purge=1
+    elif [ $p == "--force" ]
+    then
+      force=1
+    fi
+  done
+
+  done=0
+
+	for i in $VERSIONS
+	do
+		if [ -z $version ]
+    then
+			echo -n -e "Choose a Postgres version to remove or check the options.\n"
+			usage
+      break
+	  else
+      done=1
+      remove $version $purge $force
+    fi
+  done
 }

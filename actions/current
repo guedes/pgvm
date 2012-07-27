@@ -32,8 +32,12 @@ Use: pgvm current
 
 current()
 {
-	current_dir=$(readlink $pgvm_home/environments/current)
-	current_version=$(basename $current_dir)
+	if [ -L $pgvm_home/environments/current ]; then
+    current_dir=$(readlink $pgvm_home/environments/current)
+	  current_version=$(basename $current_dir)
 
-	echo $current_version
+	  echo $current_version
+  else
+    echo "Please, install a PostgreSQL Version!"
+  fi
 }
