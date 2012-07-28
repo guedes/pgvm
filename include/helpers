@@ -41,6 +41,110 @@ execute_action()
 	fi
 }
 
+parse_options()
+{
+  for opt in $*
+  do
+    opt=$(echo $opt | sed 's/--/opt_/g' | sed 's/-/_/g')
+    value=$(echo $opt | cut -s -d'=' -f2)
+    opt=$(echo $opt | cut -d'=' -f1)
+    value=${value:-1}
+    eval "export $opt=$value"
+  done
+}
+
+get_curl_cmd()
+{
+  curl_cmd=$1
+  shift
+  url=$1
+  shift
+  file=$1
+  shift
+
+  parse_options $*
+ 
+  if [ -n $opt_silent ]
+  then
+    curl_cmd="$curl_cmd --silent"
+  fi
+
+  if [ -n $opt_location ]
+  then
+    curl_cmd="$curl_cmd --location"
+  fi
+
+  if [ -n $opt_continue ]
+  then
+    curl_cmd="$curl_cmd -C -"
+  fi
+
+  if [ -n $opt_check_timestamp ]
+  then
+    curl_cmd="$curl_cmd -z $file"
+  fi
+
+  curl_cmd="$curl_cmd -o $file $url"
+
+  echo $curl_cmd
+}
+
+get_wget_cmd()
+{
+  wget_cmd=$1
+  shift
+  url=$1
+  shift
+  file=$1
+  shift
+
+  parse_options $*
+
+  if [ -n $opt_silent ]
+  then
+    wget_cmd="$wget_cmd --quiet"
+  fi
+
+  if [ -n $opt_continue ]
+  then
+    wget_cmd="$wget_cmd -c"
+  fi
+
+  if [ -n $opt_check_timestamp ]
+  then
+    wget_cmd="$wget_cmd -N"
+  fi
+
+  wget_cmd="$wget_cmd -O $file $url"
+
+  echo $wget_cmd
+}
+
+download()
+{
+  url=$1
+  shift
+  file=$1
+  shift
+
+  download_cmd=$(which curl)
+  download_cmd=${download_cmd:-$(which wget)}
+  name_cmd=$(basename "$download_cmd")
+ 
+  if [ "$name_cmd" == "curl" ] 
+  then
+    download_cmd=$(get_curl_cmd $download_cmd $url $file $*)
+  elif [ "$name_cmd" == "wget" ] 
+  then
+    download_cmd=$(get_wget_cmd $download_cmd $url $file $*)
+  else
+    echo "\nDownload command not found!"
+    exit 1
+  fi
+
+  $download_cmd 2>/dev/null
+}
+
 get_postgres()
 {
 	version=${1:-$version}
@@ -51,9 +155,9 @@ get_postgres()
 
 	cd $pg_dest_dir
 	echo -n "downloading '$pg_url', please be patient... "
-	curl $pg_url -z postgresql-$version.tar.gz     -o postgresql-$version.tar.gz --silent --location -C - 2>/dev/null
+  download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
+  download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
 	echo "done."
-	curl $pg_url.md5 -z postgresql-$version.tar.gz.md5 -o postgresql-$version.tar.gz.md5 --silent --location -C - 2>/dev/null
 
 	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
 	md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
