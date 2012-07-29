@@ -80,10 +80,10 @@ remove()
   then
 
     current=$(current)
-    if [ $current == $version ] && [ $force -eq 1  ]
+    if [ "$current" == "$version" ] && [ $force -eq 1 ]
     then
       rm -f $pgvm_home/environments/current
-    elif [ $current == $version ] && [ $force -eq 0 ]
+    elif [ "$current" == "$version" ] && [ $force -eq 0 ]
     then
       echo -e "You try to remove the current $current version. Use the --force to remove it!\n"
       break
@@ -116,16 +116,16 @@ uninstall()
   force=0
   purge=0
 
-  for p in $*
-  do
-    if [ $p == "--purge" ]
-    then
-      purge=1
-    elif [ $p == "--force" ]
-    then
-      force=1
-    fi
-  done
+  parse_options $*
+
+  if [ -n $opt_purge ]
+  then
+    purge=1
+  fi
+  if [ -n $opt_force ]
+  then
+    force=1
+  fi
 
   done=0
 
