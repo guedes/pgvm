@@ -40,9 +40,12 @@ list()
 		postgres_executable=$path/bin/postgres
 		pg_config=$path/bin/pg_config
 
-		banner=$( ${pg_config} --version )
-		binary_info=$(file -e elf $postgres_executable | cut -d: -f2-)
+		if [ -f $pg_config ] && [ -f $postgres_executable ]
+		then
+			banner=$( ${pg_config} --version )
+			binary_info=$(file -e elf $postgres_executable | cut -d: -f2-)
 
-		printf "%3s %-18s [%s ]\n" "$is_current" "$banner" "$binary_info"
+			printf "%3s %-18s [%s ]\n" "$is_current" "$banner" "$binary_info"
+		fi
 	done
 }
