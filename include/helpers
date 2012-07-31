@@ -21,6 +21,14 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+shopt -s expand_aliases
+
+case $OSTYPE in 
+    darwin*)
+        alias md5sum=create_osx_md5
+    ;;
+esac
+
 action_exists()
 {
 	[[ -f "${pgvm_home}/actions/$1" ]]
@@ -154,17 +162,22 @@ get_postgres()
 	mkdir -p $pg_dest_dir
 
 	cd $pg_dest_dir
-	echo -n "downloading '$pg_url', please be patient... "
-  download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
-  download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
-	echo "done."
 
-	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
-	md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
+    if [ ! -e postgresql-$version.tar.gz ]; then
+    	echo -n "downloading '$pg_url', please be patient... "
+        download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
+        download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
+	    echo "done."
+    else
+    	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
 
-	[[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
+    	md5sum -c postgresql-$version.tar.gz.md5
+        #>/dev/null 2>/dev/null
 
-	echo "done."
+	    [[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
+	    echo "done."
+    fi
+
 }
 
 extract_postgres()
@@ -226,4 +239,16 @@ create_symlinks()
 check_env()
 {
 	[[ -z $pgvm_home ]] && echo "\$pgvm_home is not set!" && exit 1
+}
+
+create_osx_md5()
+{
+    shift
+    pg_file=$1
+    md5hash=( `cat $pg_file` `md5 -r ${pg_file/.md5/}` )
+
+    echo ${md5hash[2]}
+    echo ${md5hash[0]}
+
+    [[ ${md5hash[0]} == ${md5hash[2]} ]] && echo ${md5hash[1]}: "SUCCESS" || exit 1
 }
