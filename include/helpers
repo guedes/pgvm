@@ -61,25 +61,25 @@ get_curl_cmd()
   shift
   file=$1
   shift
-
-  parse_options $*
  
-  if [ -n $opt_silent ]
+  parse_options $*
+
+  if [ ! -z $opt_silent ]
   then
     curl_cmd="$curl_cmd --silent"
   fi
 
-  if [ -n $opt_location ]
+  if [ ! -z $opt_location ]
   then
     curl_cmd="$curl_cmd --location"
   fi
 
-  if [ -n $opt_continue ]
+  if [ ! -z $opt_continue ]
   then
     curl_cmd="$curl_cmd -C -"
   fi
 
-  if [ -n $opt_check_timestamp ]
+  if [ ! -z $opt_check_timestamp ] && [ "$file" != "-" ]
   then
     curl_cmd="$curl_cmd -z $file"
   fi
@@ -100,17 +100,17 @@ get_wget_cmd()
 
   parse_options $*
 
-  if [ -n $opt_silent ]
+  if [ ! -z $opt_silent ]
   then
     wget_cmd="$wget_cmd --quiet"
   fi
 
-  if [ -n $opt_continue ]
+  if [ ! -z $opt_continue ]
   then
     wget_cmd="$wget_cmd -c"
   fi
 
-  if [ -n $opt_check_timestamp ]
+  if [ ! -z $opt_check_timestamp ]
   then
     wget_cmd="$wget_cmd -N"
   fi
@@ -130,13 +130,10 @@ download()
   download_cmd=$(which curl)
   download_cmd=${download_cmd:-$(which wget)}
   name_cmd=$(basename "$download_cmd")
- 
-  if [ "$name_cmd" == "curl" ] 
+
+  if [ "$name_cmd" != "" ]
   then
-    download_cmd=$(get_curl_cmd $download_cmd $url $file $*)
-  elif [ "$name_cmd" == "wget" ] 
-  then
-    download_cmd=$(get_wget_cmd $download_cmd $url $file $*)
+    download_cmd=$(get_${name_cmd}_cmd $download_cmd $url "$file" $*)
   else
     echo "\nDownload command not found!"
     exit 1
