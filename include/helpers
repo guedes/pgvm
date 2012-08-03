@@ -152,90 +152,102 @@ download()
 
 get_postgres()
 {
-	version=${1:-$version}
-	pg_dest_dir=$pgvm_home/src
-	pg_url=$(postgres_download_url $version)
+   version=${1:-$version}
+   if [ $(echo $version|wc -c) -eq 4 ]
+   then
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep $version)
+   elif [ $(echo $version|wc -c) -eq 2 ]
+   then
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep ^"$version"|head -n1) 
+   fi
 
-	mkdir -p $pg_dest_dir
 
-	cd $pg_dest_dir
+   pg_dest_dir=$pgvm_home/src
+   pg_url=$(postgres_download_url $version)
 
-    if [ ! -e postgresql-$version.tar.gz ]; then
-    	echo -n "downloading '$pg_url', please be patient... "
-        download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
-        download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
-	    echo "done."
-    else
-    	echo -n "checking 'postgresql-$version.tar.gz' integrity... "
+   mkdir -p $pg_dest_dir
 
-    	md5sum -c postgresql-$version.tar.gz.md5
-        #>/dev/null 2>/dev/null
+   cd $pg_dest_dir
+   echo -n "downloading '$pg_url', please be patient... "
+   download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
+   download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
+   echo "done."
 
-	    [[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
-	    echo "done."
-    fi
+   if [ ! -e postgresql-$version.tar.gz ]; then
+      echo -n "downloading '$pg_url', please be patient... "
+      download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
+      download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
+	  echo "done."
+   else
+      echo -n "checking 'postgresql-$version.tar.gz' integrity... "
+
+      md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
+
+	  [[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
+	     echo "done."
+   fi
 
 }
 
 extract_postgres()
 {
-	version=${1:-$version}
-	pg_dest_dir=$pgvm_home/src
+   version=${1:-$version}
+   pg_dest_dir=$pgvm_home/src
 
-	cd $pg_dest_dir
+   cd $pg_dest_dir
 
-	echo -n "extracting postgresql-$version.tar.gz ... "
-	tar zxvf postgresql-$version.tar.gz >/dev/null
-	[[ $? -ne 0 ]] && echo "ERRO: can not extract file 'postgresql-$version.tar.gz'" && exit 1
-	echo "done."
+   echo -n "extracting postgresql-$version.tar.gz ... "
+   tar zxvf postgresql-$version.tar.gz >/dev/null
+   [[ $? -ne 0 ]] && echo "ERRO: can not extract file 'postgresql-$version.tar.gz'" && exit 1
+   echo "done."
 }
 
 compile_and_install_postgres()
 {
-	version=${1:-$version}
-	configure_options=${CONFIG_OPTS}
-	make_options=${MAKE_OPTS}
+   version=${1:-$version}
+   configure_options=${CONFIG_OPTS}
+   make_options=${MAKE_OPTS}
 
-	pg_dest_dir=$pgvm_home/src/postgresql-$version
+   pg_dest_dir=$pgvm_home/src/postgresql-$version
 
-	cd $pg_dest_dir
-	mkdir -p $pgvm_home/environments/$version
+   cd $pg_dest_dir
+   mkdir -p $pgvm_home/environments/$version
 
-	echo -n "configuring PostgreSQL Version: $version ... "
-	./configure --prefix=$pgvm_home/environments/$version ${configure_options} --silent
-	echo "done."
+   echo -n "configuring PostgreSQL Version: $version ... "
+   ./configure --prefix=$pgvm_home/environments/$version ${configure_options} --silent
+   echo "done."
 
-	echo -n "compiling ... "
-	make ${make_options} 1>make.log 2>make.error.log
-	[[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version, see make.error.log for details." && exit 1
-	echo "done."
+   echo -n "compiling ... "
+   make ${make_options} 1>make.log 2>make.error.log
+   [[ $? -ne 0 ]] && echo "ERRO: can not compile PostgreSQL $version, see make.error.log for details." && exit 1
+   echo "done."
 
-	echo -n "installing ... "
-	make install 1>make_install.log 2>make_install.error.log
-	[[ $? -ne 0 ]] && echo "ERRO: can not install PostgreSQL $version" && exit 1
-	echo "done."
+   echo -n "installing ... "
+   make install 1>make_install.log 2>make_install.error.log
+   [[ $? -ne 0 ]] && echo "ERRO: can not install PostgreSQL $version" && exit 1
+   echo "done."
 }
 
 version_is_installed()
 {
-	version=${1:-$version}
+   version=${1:-$version}
 
-	[[ -d "${pgvm_home}/environments/$version" ]]
+   [[ -d "${pgvm_home}/environments/$version" ]]
 }
 
 create_symlinks()
 {
-	check_env
+   check_env
 
-	version=${1:-$version}
-	mkdir --parents $pgvm_home/environments
-	ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
-	builtin hash -r
+   version=${1:-$version}
+   mkdir --parents $pgvm_home/environments
+   ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
+   builtin hash -r
 }
 
 check_env()
 {
-	[[ -z $pgvm_home ]] && echo "\$pgvm_home is not set!" && exit 1
+   [[ -z $pgvm_home ]] && echo "\$pgvm_home is not set!" && exit 1
 }
 
 create_osx_md5()
