@@ -31,6 +31,8 @@ Usage
       list         List all installed PostgreSQL versions
       use          Choose an enviroment to use
 
+      cluster      Manipulate clusters (PGDATA directories)
+
       help         This help
 
 
