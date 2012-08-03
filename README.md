@@ -97,14 +97,10 @@ An example session
 
     ~$ pgvm cluster start replica
     server starting
-    LOG:  database system was shut down at 2012-08-02 22:41:16 BRT
     LOG:  database system is ready to accept connections
-    LOG:  autovacuum launcher started
 
     ~$ pgvm cluster start test
     server starting
-    LOG:  database system was shut down at 2012-08-02 20:51:02 BRT
-    LOG:  autovacuum launcher started
     LOG:  database system is ready to accept connections
 
     ~$ netstat -anp | grep postgres | grep "LISTEN "
