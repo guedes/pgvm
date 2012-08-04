@@ -23,7 +23,7 @@
 
 shopt -s expand_aliases
 
-case $OSTYPE in 
+case $OSTYPE in
     darwin*)
         alias md5sum=create_osx_md5
     ;;
@@ -69,7 +69,7 @@ get_curl_cmd()
   shift
   file=$1
   shift
- 
+
   parse_options $*
 
   if [ ! -z $opt_silent ]
@@ -153,14 +153,15 @@ download()
 get_postgres()
 {
    version=${1:-$version}
-   if [ $(echo $version|wc -c) -eq 4 ]
+   version_length=$(echo $version|wc -c)
+
+   if [ $version_length -eq 4 ]
    then
       version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep $version)
-   elif [ $(echo $version|wc -c) -eq 2 ]
+   elif [ $version_length -eq 2 ]
    then
-      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep ^"$version"|head -n1) 
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep ^"$version"|head -n1)
    fi
-
 
    pg_dest_dir=$pgvm_home/src
    pg_url=$(postgres_download_url $version)
@@ -168,25 +169,20 @@ get_postgres()
    mkdir -p $pg_dest_dir
 
    cd $pg_dest_dir
-   echo -n "downloading '$pg_url', please be patient... "
-   download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
-   download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
-   echo "done."
 
    if [ ! -e postgresql-$version.tar.gz ]; then
-      echo -n "downloading '$pg_url', please be patient... "
-      download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
-      download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
-	  echo "done."
-   else
-      echo -n "checking 'postgresql-$version.tar.gz' integrity... "
-
-      md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
-
-	  [[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && exit 1
-	     echo "done."
+	   echo -n "downloading '$pg_url', please be patient... "
+	   download $pg_url postgresql-$version.tar.gz --silent --location --continue --check-timestamp
+	   download $pg_url.md5 postgresql-$version.tar.gz.md5 --silent --location --continue --check-timestamp
+	   echo "done."
    fi
 
+   echo -n "checking 'postgresql-$version.tar.gz' integrity... "
+
+   md5sum -c postgresql-$version.tar.gz.md5 >/dev/null 2>/dev/null
+
+   [[ $? -ne 0 ]] && echo "ERRO: CHECKSUM of 'postgresql-$version.tar.gz' has failed! Aborting!" && rm postgresql-$version.tar.gz* && exit 1
+   echo "done."
 }
 
 extract_postgres()
