@@ -23,11 +23,6 @@
 
 source $pgvm_home/include/helpers
 
-if [ -f ~/.pgvmrc ]
-then
-  source ~/.pgvmrc
-fi
-
 action=$1
 
 [[ $# -ne 0 ]] && execute_action $@ || execute_action help
