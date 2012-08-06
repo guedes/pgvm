@@ -23,10 +23,7 @@
 
 source $pgvm_home/include/helpers
 
-if [ -f ~/.pgvmrc ]
-then
-  source ~/.pgvmrc
-fi
+load_conf
 
 action=$1
 
