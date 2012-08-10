@@ -43,7 +43,7 @@ Usage: pgvm install <version>
   'make' and 'configure' respectively
 
   Examples:
-           CONFIG_OPTS="--enable-cassert" MAKE_OPTS="-j 16" pgvm install 9.1.4
+           CONFIG_OPTS=\"--enable-cassert\" MAKE_OPTS=\"-j 16\" pgvm install 9.1.4
 
 """
 }
