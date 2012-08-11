@@ -23,6 +23,8 @@
 
 source $pgvm_home/include/helpers
 
+load_conf
+
 action=$1
 
 [[ $# -ne 0 ]] && execute_action $@ || execute_action help
