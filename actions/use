@@ -43,7 +43,10 @@ use()
 	version=$1
 	[[ "x$version" == "x" ]] && usage && exit
 
-	version_is_installed $version && create_symlinks || exit
+	version_is_installed $version && create_symlinks || {
+		echo "version $version is not installed"
+		exit 1
+	}
 
 	echo "switched to $version"
 }
