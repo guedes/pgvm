@@ -107,7 +107,7 @@ remove()
 
 uninstall()
 {
-	VERSIONS=$($LS -1 $pgvm_home/environments/ 2> /dev/null)
+	VERSIONS=$($LS -1 $pgvm_home/environments/ 2> /dev/null | grep -v current)
 	SOURCES=$($LS -1 $pgvm_home/src/ 2> /dev/null)
 
   version=$1

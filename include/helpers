@@ -257,3 +257,18 @@ create_osx_md5()
 
     [[ ${md5hash[0]} == ${md5hash[2]} ]] && echo ${md5hash[1]}: "SUCCESS" || exit 1
 }
+
+load_conf()
+{
+    files="/etc/pgvmrc $HOME/.pgvmrc"
+
+    for file in $files
+    do
+        if [ -f $file ]
+        then
+            source $file
+            export PGVMRC=$file
+            break
+        fi
+    done
+}
