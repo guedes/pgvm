@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - 1.9.3
+install: gem install tf -v '>=0.4.1'
+script: 'tf --text test/pgvm_comment_test.sh'
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#postgresql-br"
+  email:
+    recipients:
+      - guedes@guedesoft.net
+    on_failure: change
