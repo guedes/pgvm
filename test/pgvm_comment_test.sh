@@ -116,7 +116,11 @@ pgvm cluster list
 #match=/^cluster in current enviroment \(8.4.11\):$/
 #match=/^    test  is online  at port 5433$/
 
-## testing clusters in 8,4.11
+pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/8.4.11\/latin1_cluster'... ok!$/
+
+## testing clusters in 9.1.5
 
 pgvm use 9.1.5
 #status=0
@@ -137,7 +141,7 @@ pgvm cluster start my_cluster
 pgvm cluster list
 #status=0
 #match=/^cluster in current enviroment \(9.1.5\):$/
-#match=/^    my_cluster  is online  at port 5434$/
+#match=/^    my_cluster  is online  at port 5435$/
 
 pgvm cluster create my_another_cluster
 #status=0
@@ -150,8 +154,8 @@ pgvm cluster start my_another_cluster
 pgvm cluster list
 #status=0
 #match=/^cluster in current enviroment \(9.1.5\):$/
-#match=/^    my_another_cluster is online  at port 5435$/
-#match=/^    my_cluster         is online  at port 5434$/
+#match=/^    my_another_cluster is online  at port 5436$/
+#match=/^    my_cluster         is online  at port 5435$/
 
 ## testing stopping cluster
 

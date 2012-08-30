@@ -54,6 +54,7 @@ cluster()
 create()
 {
 	cluster_name=$1 ; shift
+	initdb_options="$*"
 
 	[[ -z "$cluster_name" ]] && echo "please, choose a name for cluster!" && exit 1
 
@@ -66,7 +67,7 @@ create()
 	mkdir --parents $pgvm_home/logs
 
 	echo -n "initializing cluster in '$cluster_dir'... "
-	$pgvm_home/environments/current/bin/initdb -D $cluster_dir 1> $pgvm_home/logs/install.$cluster_name@$(current).log 2>$pgvm_home/logs/install.$cluster_name@$(current).error.log
+	$pgvm_home/environments/current/bin/initdb -D $cluster_dir $initdb_options 1> $pgvm_home/logs/install.$cluster_name@$(current).log 2>$pgvm_home/logs/install.$cluster_name@$(current).error.log
 
 	[[ $? -ne 0 ]] && echo "error!" && cat $pgvm_home/logs/install.$cluster_name@$(current).error.log && exit 1
 
