@@ -6,6 +6,7 @@ script: 'tf --text test/pgvm_comment_test.sh'
 notifications:
   irc:
     channels:
+      - "irc.freenode.org#pgvm"
       - "irc.freenode.org#postgresql-br"
   email:
     recipients:
