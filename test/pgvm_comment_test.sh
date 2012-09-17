@@ -206,3 +206,26 @@ pgvm cluster list
 #status=0
 #match=/^cluster in current enviroment \(master\):$/
 #match=/^    cl_test_master  is online  at port 5437$/
+
+pgvm install 088c065
+#status=0
+#match=/^configuring PostgreSQL Version: master ... done.$/
+#match=/^compiling ... done.$/
+#match=/^installing ... done.$/
+
+pgvm use 088c065
+#status=0
+#match=/^switched to master$/
+
+pgvm cluster create cl_test_other
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/088c065\/cl_test_other'... ok!$/
+
+pgvm cluster start cl_test_other
+#status=0
+#match=/^starting cluster cl_test_other@088c065$/
+
+pgvm cluster list
+#status=0
+#match=/^cluster in current enviroment \(088c065\):$/
+#match=/^    cl_test_other  is online  at port 5438$/

@@ -242,6 +242,8 @@ compile_and_install_postgres()
    if seems_to_be_from_repo $version
    then
      pg_dest_dir=$pg_dest_dir/postgresql-clone
+     cd $pg_dest_dir
+     make clean 1>make-clean.clean.log 2>make-clean.error.log
    else
      pg_dest_dir=$pg_dest_dir/postgresql-$version
    fi
