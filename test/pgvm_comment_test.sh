@@ -209,13 +209,13 @@ pgvm cluster list
 
 pgvm install 088c065
 #status=0
-#match=/^configuring PostgreSQL Version: master ... done.$/
+#match=/^configuring PostgreSQL Version: 088c065 ... done.$/
 #match=/^compiling ... done.$/
 #match=/^installing ... done.$/
 
 pgvm use 088c065
 #status=0
-#match=/^switched to master$/
+#match=/^switched to 088c065$/
 
 pgvm cluster create cl_test_other
 #status=0
