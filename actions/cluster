@@ -37,6 +37,10 @@ Usage: pgvm cluster <action> <args>
     rename      Renames a cluster
     list        List all clusters
 
+    stop        Stop a cluster
+    start       Start a cluster
+    status      Print status of a cluster
+
     import      Import a cluster from tarball
     export      Export a cluster to tarball
 """

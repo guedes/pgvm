@@ -153,7 +153,7 @@ pgvm cluster start my_another_cluster
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.1\):$/
+#match=/^cluster in current enviroment \(9.2.0\):$/
 #match=/^    my_another_cluster is online  at port 5436$/
 #match=/^    my_cluster         is online  at port 5435$/
 
@@ -262,3 +262,30 @@ echo "select version()" | pgvm console test
 #status=0
 #match=/PostgreSQL 8.4.12/
 pgvm cluster stop test
+
+pgvm install REL9_2_STABLE
+#status=0
+#match=/^configuring PostgreSQL Version: REL9_2_STABLE ... done.$/
+#match=/^compiling ... done.$/
+#match=/^installing ... done.$/
+
+pgvm use REL9_2_STABLE
+#status=0
+#match=/^switched to REL9_2_STABLE$/
+
+pgvm cluster create cl_test_rel92_stable
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/REL9_2_STABLE\/cl_test_rel92_stable'... ok!$/
+
+pgvm cluster start cl_test_rel92_stable
+#status=0
+#match=/^starting cluster cl_test_rel92_stable@REL9_2_STABLE$/
+
+pgvm cluster list
+#status=0
+#match=/^cluster in current enviroment \(REL9_2_STABLE\):$/
+#match=/^    cl_test_rel92_stable  is online  at port 5439$/
+
+pgvm cluster stop cl_test_rel92_stable
+#status=0
+#match=/stopping cluster cl_test_rel92_stable@REL9_2_STABLE$/
