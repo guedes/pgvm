@@ -153,7 +153,7 @@ download()
 seems_to_be_from_repo()
 {
   version=${1:-$version}
-  echo $version | egrep -v "^[0-9](\.[0-9]+)*([a-z]+[0-9]*)?$" &>/dev/null
+  echo $version | egrep "^[0-9a-f]{7,40}$|^REL([[:digit:]])+_([[:digit:]])+_([[:alnum:]])+(_BRANCH)?$|^master$" &>/dev/null
   [[ $? -eq 0 ]]
 }
 

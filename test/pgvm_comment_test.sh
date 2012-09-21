@@ -229,3 +229,30 @@ pgvm cluster list
 #status=0
 #match=/^cluster in current enviroment \(088c065\):$/
 #match=/^    cl_test_other  is online  at port 5438$/
+
+pgvm install REL9_2_STABLE
+#status=0
+#match=/^configuring PostgreSQL Version: REL9_2_STABLE ... done.$/
+#match=/^compiling ... done.$/
+#match=/^installing ... done.$/
+
+pgvm use REL9_2_STABLE
+#status=0
+#match=/^switched to REL9_2_STABLE$/
+
+pgvm cluster create cl_test_rel92_stable
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/REL9_2_STABLE\/cl_test_rel92_stable'... ok!$/
+
+pgvm cluster start cl_test_rel92_stable
+#status=0
+#match=/^starting cluster cl_test_rel92_stable@REL9_2_STABLE$/
+
+pgvm cluster list
+#status=0
+#match=/^cluster in current enviroment \(REL9_2_STABLE\):$/
+#match=/^    cl_test_rel92_stable  is online  at port 5439$/
+
+pgvm cluster stop cl_test_rel92_stable
+#status=0
+#match=/stopping cluster cl_test_rel92_stable@REL9_2_STABLE$/
