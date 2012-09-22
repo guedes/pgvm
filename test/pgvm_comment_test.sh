@@ -229,3 +229,36 @@ pgvm cluster list
 #status=0
 #match=/^cluster in current enviroment \(088c065\):$/
 #match=/^    cl_test_other  is online  at port 5438$/
+
+echo "select version()" | pgvm console my_cluster@9.2.0
+#status=1
+#match=/the cluster 'my_cluster' seems to be offline/
+
+echo "select version()" | pgvm console test@8.4.11
+#status=1
+#match=/the cluster 'test' seems to be offline/
+
+pgvm use 9.2.0
+pgvm cluster start my_cluster
+pgvm use 8.4.11
+pgvm cluster start test
+pgvm use master
+echo "select version()" | pgvm console my_cluster@9.2.0
+#status=0
+#match=/PostgreSQL 9.2.0/
+
+echo "select version()" | pgvm console test@8.4.11
+#status=0
+#match=/PostgreSQL 8.4.11/
+
+pgvm use 9.2.0
+echo "select version()" | pgvm console my_cluster
+#status=0
+#match=/PostgreSQL 9.2.0/
+pgvm cluster stop my_cluster
+
+pgvm use 8.4.11
+echo "select version()" | pgvm console test
+#status=0
+#match=/PostgreSQL 8.4.11/
+pgvm cluster stop test
