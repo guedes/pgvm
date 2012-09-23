@@ -35,7 +35,8 @@ Usage: pgvm cluster <action> <args>
     create      Creates a new cluster (PGDATA)
     remove      Removes a cluster
     rename      Renames a cluster
-    list        List all clusters
+    list        List all clusters of current environment
+    list --all  List all clusters of all environments
 
     import      Import a cluster from tarball
     export      Export a cluster to tarball
@@ -82,18 +83,40 @@ create()
 
 list()
 {
-    cluster_top_dir="$pgvm_home/clusters/$(current)"
-    clusters=$(find ${cluster_top_dir}/* -maxdepth 0 -type d -exec basename {} \; 2> /dev/null)
+    cluster_top_dir="$pgvm_home/clusters"
+    current_version=$(current)
 
-    [[ -z "$clusters" ]] && echo "there is no clusters in current environment ($(current))" && exit 1
+    if [ "$current_version" == "Please, install a PostgreSQL Version!" ]
+    then
+        echo $current_version
+        exit 1
+    fi
 
-    echo -e "cluster in current enviroment ($(current)):\n"
+    if [ "$1x" == "--allx" ]
+    then
+        versions=$(find ${cluster_top_dir}/* -maxdepth 0 -type d)
+        if [ "$versions" == "" ]
+        then
+          echo "there is no created clusters"
+          exit 1
+        fi
+    else
+        versions="$cluster_top_dir/$(current)"
+    fi
 
-    max_length=$(echo $clusters | awk 'BEGIN { RS = " " } ; { print length() }' | sort -n | tail -1)
-
-    for cluster in ${clusters}
+    for top_dir in ${versions}
     do
-        printf "%3s %-${max_length}s is %-7s at port %-4s\n" "$is_current" "$cluster" "$(cluster_human_status $cluster)" "$(cluster_port $cluster)"
+        clusters=$(find ${top_dir}/* -maxdepth 0 -type d -exec basename {} \; 2> /dev/null)
+        cluster_version=$(basename $top_dir)
+
+        [[ -z "$clusters" ]] && echo "there is no clusters in current environment (${cluster_version})" && exit 1
+
+        max_length=$(echo $clusters | awk 'BEGIN { RS = " " } ; { print length() }' | sort -n | tail -1)
+
+        for cluster in ${clusters}
+        do
+            printf "%3s %-6s %-${max_length}s is %-7s at port %-4s\n" "$is_current" "$cluster_version" "$cluster" "$(cluster_human_status $cluster $cluster_version)" "$(cluster_port $cluster $cluster_version)"
+        done
     done
 }
 
@@ -163,16 +186,20 @@ cluster_ctl()
 cluster_human_status()
 {
     cluster_name=$1
-    cluster_top_dir="$pgvm_home/clusters/$(current)"
+    cluster_version=$2
+    [[ -z "$cluster_version" ]] && cluster_version=$(current)
+    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
-    $pgvm_home/environments/current/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
+    $pgvm_home/environments/$cluster_version/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
 }
 
 cluster_port()
 {
     cluster_name=$1
-    cluster_top_dir="$pgvm_home/clusters/$(current)"
+    cluster_version=$2
+    [[ -z "$cluster_version" ]] && cluster_version=$(current)
+    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
     cluster_port=$(egrep "^\s*port\s*=" $cluster_dir/postgresql.conf)
