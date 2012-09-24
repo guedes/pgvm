@@ -36,6 +36,8 @@ Usage: pgvm action [arguments]
 
     cluster      Manipulate clusters (PGDATA directories)
 
+    console      Starts psql and connects to a specified cluster
+
     help         This help
 """
 }

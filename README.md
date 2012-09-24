@@ -18,164 +18,40 @@ Then open a new terminal or type:
 
 and voilà!
 
-
-Usage
------
-
-    $ pgvm help
-    Usage: pgvm action [arguments]
-
-    - actions:
-
-      install      Installs a specific PostgreSQL version
-      uninstall    Uninstalls a specific PostgreSQL version
-
-      list         List all installed PostgreSQL versions
-      use          Choose an enviroment to use
-
-      cluster      Manipulate clusters (PGDATA directories)
-
-      help         This help
-
-
 An example session
 ------------------
 
-    ~$ pgvm help
+Once you installed `pgvm` you could like to see which
+PostgreSQL versions were installed. In fact the `pgvm`
+installation didn't install any.
 
-    Usage: pgvm action [arguments]
+You list all PostgreSQL installed version with the
+action `list`:
 
-      - actions:
-
-        install      Installs a specific PostgreSQL version
-        uninstall    Uninstalls a specific PostgreSQL version
-
-        list         List all installed PostgreSQL versions
-        use          Choose an enviroment to use
-
-        cluster      Manipulate clusters (PGDATA directories)
-
-        help         This help
-
-
-    ~$ pgvm help install
-
-    Usage: pgvm install <version>
-
-      <version> is the postgres semantic version that
-                you want to install, a branch or a
-                commit hash from postgresql git repo.
-
-      Examples:
-               pgvm install 9.0.7
-               pgvm install 9.1.3
-               pgvm install master
-               pgvm install c89bdf7690
-
-      You can pass MAKE_OPTS and CONFIG_OPTS for
-      'make' and 'configure' respectively
-
-      Examples:
-               CONFIG_OPTS=--enable-cassert MAKE_OPTS=-j 16 pgvm install 9.1.5
-
-
-
-    ~$ pgvm help uninstall
-
-    Usage: pgvm uninstall <version> [OPTIONS]
-
-      <version> is the postgres semantic version that
-                you want to uninstall.
-
-      Examples:
-               pgvm uninstall 9.0.7
-               pgvm uninstall 9.1.3
-               pgvm uninstall 9.1.1 --purge
-               pgvm uninstall --all
-               pgvm uninstall --all --purge
-               pgvm uninstall master
-
-
-    == Options
-
-
-      --all		Remove all postgres versions installed.
-
-      --purge	Remove postgres version source.
-
-      --force	If is the current version then remove it.
-
-
-    ~$ pgvm help list
-
-    Usage: pgvm action [arguments]
-
-      - actions:
-
-        install      Installs a specific PostgreSQL version
-        uninstall    Uninstalls a specific PostgreSQL version
-
-        list         List all installed PostgreSQL versions
-        use          Choose an enviroment to use
-
-        cluster      Manipulate clusters (PGDATA directories)
-
-        help         This help
-
-
-    ~$ pgvm help use
-
-    Select a specific version of PostgreSQL to use.
-
-    Usage: pgvm use X.Y.Z
-
-    where X.Y.Z is the semantic version of a installed PostgreSQL
-
-    E.g.
-       ~$ pgvm use 9.1.5
-
-    TIP: you can use 'pgvm list' to see the PostgreSQL
-         installations available.
-
-
-    ~$ pgvm help cluster
-
-    Manipulates clusters within pgvm.
-
-    Usage: pgvm cluster <action> <args>
-
-      - action
-
-        create      Creates a new cluster (PGDATA)
-        remove      Removes a cluster
-        rename      Renames a cluster
-        list        List all clusters
-
-        import      Import a cluster from tarball
-        export      Export a cluster to tarball
-
-
-    ~$ pgvm list
+    $ pgvm list
     Please, install a PostgreSQL Version!
 
+As you can see, there isn't any. Lets install one
+using the action `install`:
 
-    ~$ pgvm install 9
-    downloading 'http://ftp.postgresql.org/pub/source/v9.1.5/postgresql-9.1.5.tar.gz', please be patient... done.
-    checking 'postgresql-9.1.5.tar.gz' integrity... done.
-    extracting postgresql-9.1.5.tar.gz ... done.
-    configuring PostgreSQL Version: 9.1.5 ... done.
+    $ pgvm install 9
+    downloading 'http://ftp.postgresql.org/pub/source/v9.2.0/postgresql-9.2.0.tar.gz', please be patient... done.
+    checking 'postgresql-9.2.0.tar.gz' integrity... done.
+    extracting postgresql-9.2.0.tar.gz ... done.
+    configuring PostgreSQL Version: 9.2.0 ... done.
     compiling ... done.
     installing ... done.
 
-    ~$ pgvm install 8.3
-    downloading 'http://ftp.postgresql.org/pub/source/v8.3.19/postgresql-8.3.19.tar.gz', please be patient... done.
-    checking 'postgresql-8.3.19.tar.gz' integrity... done.
-    extracting postgresql-8.3.19.tar.gz ... done.
-    configuring PostgreSQL Version: 8.3.19 ... done.
-    compiling ... done.
-    installing ... done.
+Notice that the version supplied was `9` but `pgvm`
+found that the last PostgreSQL version is `9.2.0`.
 
-    ~$ MAKE_OPTS="-j 10" CONFIG_OPTS="--enable-cassert" pgvm install 8.4.11
+Now suppose we want to install the `8.4.11` version
+with `cassert` enabled, using more cores of our
+processors, just export `MAKE_OPTS` and `CONFIG_OPTS`
+with the options for `make` and `configure` respectively,
+like bellow:
+
+    $ MAKE_OPTS="-j 10" CONFIG_OPTS="--enable-cassert" pgvm install 8.4.11
     downloading 'http://ftp.postgresql.org/pub/source/v8.4.11/postgresql-8.4.11.tar.gz', please be patient... done.
     checking 'postgresql-8.4.11.tar.gz' integrity... done.
     extracting postgresql-8.4.11.tar.gz ... done.
@@ -183,180 +59,200 @@ An example session
     compiling ... done.
     installing ... done.
 
-    ~$ pgvm install 9.2beta2
-    downloading 'http://ftp.postgresql.org/pub/source/v9.2beta2/postgresql-9.2beta2.tar.gz', please be patient... done.
-    checking 'postgresql-9.2beta2.tar.gz' integrity... done.
-    extracting postgresql-9.2beta2.tar.gz ... done.
-    configuring PostgreSQL Version: 9.2beta2 ... done.
+So now you have two PostgreSQL versions installed:
+
+    $ pgvm list
+    PostgreSQL Installed Version:
+
+        8.4.11
+        9.2.0
+
+Then `pgvm` allow you `use` one of them:
+
+    $ pgvm use 92.0
+    version 92.0 is not installed
+
+Ops! A little typo, sorry! :/
+
+    $ pgvm use 9.2.0
+    switched to 9.2.0
+
+Ah! So now my `current` version is `9.2.0`? Well
+lets just confirm:
+
+    $ pgvm current
+    9.2.0
+
+    $ pgvm list
+    PostgreSQL Installed Version:
+
+        8.4.11
+     => 9.2.0
+
+Seems that `pgvm` tell us in two ways, by the
+action `current` or when listing version by
+placing a `=>` before the version we are using!
+
+The binaries are there in the correct version:
+
+    $ pg_config --version
+    PostgreSQL 9.2.0
+
+    $ psql --version
+    psql (PostgreSQL) 9.2.0
+
+    $ pgvm use 8.4.11
+
+    $ pg_config --version
+    PostgreSQL 8.4.11
+
+    $ psql --version
+    psql (PostgreSQL) 8.4.11
+
+Ok, this is nice but how about clusters? Lets
+create one!
+
+    $ pgvm use 9.2.0
+    switched to 9.2.0
+
+    $ pgvm cluster list
+    there is no clusters in current environment (9.2.0)
+
+    $ pgvm cluster create my_cluster
+    initializing cluster in '/home/guedes/pgvm/clusters/9.2.0/my_cluster'... ok!
+
+    $ pgvm cluster start my_cluster
+    starting cluster my_cluster@9.2.0
+    LOG:  database system was shut down at 2012-09-22 21:55:03 UTC
+    LOG:  database system is ready to accept connections
+    LOG:  autovacuum launcher started
+
+    $ pgvm cluster list
+    cluster in current enviroment (9.2.0):
+
+        my_cluster  is online  at port 5433
+
+    $ pgvm cluster create my_another_cluster
+    initializing cluster in '/home/guedes/pgvm/clusters/9.2.0/my_another_cluster'... ok!
+
+    $ pgvm cluster start my_another_cluster
+    starting cluster my_another_cluster@9.2.0
+    LOG:  database system was shut down at 2012-09-22 21:55:06 UTC
+    LOG:  database system is ready to accept connections
+    LOG:  autovacuum launcher started
+
+    $ pgvm cluster list
+    cluster in current enviroment (9.2.0):
+
+        my_another_cluster is online  at port 5434
+        my_cluster         is online  at port 5433
+
+Now we have two online clusters and notice that
+`pgvm` choose specific ports to each one.
+
+You can pass options to `initdb` when creating
+a new cluster:
+
+    $ pgvm use 8.4.11
+    switched to 8.4.11
+
+    $ pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
+
+And you can remove some cluster
+
+    $ pgvm cluster create to_be_removed
+    initializing cluster in '/home/guedes/pgvm/clusters/8.4.11/to_be_removed'... ok!
+
+    $ pgvm cluster start to_be_removed
+    starting cluster to_be_removed@8.4.11
+    LOG:  database system was shut down at 2012-09-22 21:55:13 UTC
+    LOG:  database system is ready to accept connections
+    LOG:  autovacuum launcher started
+
+    $ pgvm cluster remove to_be_removed
+    To remove cluster 'to_be_removed' use  'pgvm cluster remove to_be_removed --force'
+
+    $ pgvm cluster remove to_be_removed --force
+    stopping cluster to_be_removed@8.4.11
+    LOG:  received smart shutdown request
+    LOG:  autovacuum launcher shutting down
+    LOG:  shutting down
+    LOG:  database system is shut down
+    removing 'to_be_removed' directory '/home/guedes/pgvm/clusters/8.4.11/to_be_removed' ... ok
+
+Maybe you are a PostgreSQL developer and wants to install from
+`master` branch ...
+
+    $ pgvm install master
+    getting postgres from 'git://git.postgresql.org/git/postgresql.git'
+    Cloning into '/home/guedes/pgvm/src/postgresql-clone'...
+    configuring PostgreSQL Version: master ... done.
     compiling ... done.
     installing ... done.
 
-    ~$ pgvm use 9.1.5
-    switched to 9.1.5
+    $ pgvm use master
+    switched to master
 
-    ~$ pgvm list
-    PostgreSQL Installed Version:
+    $ pgvm cluster create cl_test_master
+    initializing cluster in '/home/guedes/pgvm/clusters/master/cl_test_master'... ok!
 
-        PostgreSQL 8.3.19  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-        PostgreSQL 8.4.11  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-     => PostgreSQL 9.1.5   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-
-    ~$ pgvm cluster list
-    there is no clusters in current environment (9.1.5)
-
-    ~$ pgvm current
-    9.1.5
-
-    ~$ pg_config --configure --version
-    '--prefix=/home/user/.pgvm/environments/9.1.5'
-    PostgreSQL 9.1.5
-
-    ~$ psql --version
-    psql (PostgreSQL) 9.1.5
-    contains support for command-line editing
-
-    ~$ pgvm use 8.4.11
-    switched to 8.4.11
-
-    ~$ pgvm list
-    PostgreSQL Installed Version:
-
-        PostgreSQL 8.3.19  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-     => PostgreSQL 8.4.11  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-        PostgreSQL 9.1.5   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-
-    ~$ pgvm cluster list
-    there is no clusters in current environment (8.4.11)
-
-    ~$ pgvm current
-    8.4.11
-
-    ~$ pg_config --configure --version
-    '--prefix=/home/user/.pgvm/environments/8.4.11' '--enable-cassert'
-    PostgreSQL 8.4.11
-
-    ~$ psql --version
-    psql (PostgreSQL) 8.4.11
-    contains support for command-line editing
-
-    ~$ pgvm cluster
-
-    Manipulates clusters within pgvm.
-
-    Usage: pgvm cluster <action> <args>
-
-      - action
-
-        create      Creates a new cluster (PGDATA)
-        remove      Removes a cluster
-        rename      Renames a cluster
-        list        List all clusters
-
-        import      Import a cluster from tarball
-        export      Export a cluster to tarball
-
-
-    ~$ pgvm cluster create test
-    initializing cluster in '/home/user/.pgvm/clusters/8.4.11/test'... ok!
-
-    ~$ pgvm cluster start test
-    starting cluster test@8.4.11
-    LOG:  database system was shut down at 2012-08-05 23:48:38 BRT
-    LOG:  autovacuum launcher started
-    LOG:  database system is ready to accept connections
-
-    ~$ pgvm cluster list
-    cluster in current enviroment (8.4.11):
-
-        test  is online  at port 5433
-
-    ~$ pgvm cluster create latin1_cluster --encoding=latin1 --locale=pt_BR"
-    initializing cluster in '/home/user/.pgvm/clusters/8.4.11/latin1_cluster'... ok!
-
-    ~$ pgvm use 9.1.5
-    switched to 9.1.5
-
-    ~$ pgvm cluster list
-    there is no clusters in current environment (9.1.5)
-
-    ~$ pgvm cluster create my_cluster
-    initializing cluster in '/home/user/.pgvm/clusters/9.1.5/my_cluster'... ok!
-
-    ~$ pgvm cluster start my_cluster
-    starting cluster my_cluster@9.1.5
-    LOG:  database system was shut down at 2012-08-05 23:48:40 BRT
+    $ pgvm cluster start cl_test_master
+    starting cluster cl_test_master@master
+    LOG:  database system was shut down at 2012-09-22 21:58:49 UTC
     LOG:  database system is ready to accept connections
     LOG:  autovacuum launcher started
 
-    ~$ pgvm cluster list
-    cluster in current enviroment (9.1.5):
+    $ pgvm cluster list
+    cluster in current enviroment (master):
 
-        my_cluster  is online  at port 5435
+        cl_test_master  is online  at port 5436
 
-    ~$ pgvm cluster create my_another_cluster
-    initializing cluster in '/home/user/.pgvm/clusters/9.1.5/my_another_cluster'... ok!
+... or from a specific commit to test something ...
 
-    ~$ pgvm cluster start my_another_cluster
-    starting cluster my_another_cluster@9.1.5
-    LOG:  database system was shut down at 2012-08-05 23:48:42 BRT
-    LOG:  autovacuum launcher started
+    $ pgvm install 088c065
+    configuring PostgreSQL Version: 088c065 ... done.
+    compiling ... done.
+    installing ... done.
+
+    $ pgvm use 088c065
+    switched to 088c065
+
+    $ pgvm cluster create cl_test_other
+    initializing cluster in '/home/guedes/pgvm/clusters/088c065/cl_test_other'... ok!
+
+    $ pgvm cluster start cl_test_other
+    starting cluster cl_test_other@088c065
+    LOG:  database system was shut down at 2012-09-22 22:01:06 UTC
     LOG:  database system is ready to accept connections
+    LOG:  autovacuum launcher started
 
-    ~$ pgvm cluster list
-    cluster in current enviroment (9.1.5):
+    $ pgvm cluster list
+    cluster in current enviroment (088c065):
 
-        my_another_cluster is online  at port 5436
-        my_cluster         is online  at port 5435
+        cl_test_other  is online  at port 5437
 
-    ~$ pgvm use 8.4.11
-    switched to 8.4.11
+By the way, you can start a console on any cluster:
 
-    ~$ pgvm cluster stop test
-    stoping cluster test@8.4.11
-    LOG:  received smart shutdown request
-    LOG:  autovacuum launcher shutting down
-    LOG:  shutting down
-    LOG:  database system is shut down
-    server stopped
+    $ pgvm current
+    088c065
 
-    ~$ pgvm use 9.1.5
-    switched to 9.1.5
+    $ pgvm console my_cluster@9.2.0
+    connecting to cluster 'test' on port '5433' ...
 
-    ~$ pgvm cluster stop my_cluster
-    stoping cluster my_cluster@9.1.5
-    LOG:  received smart shutdown request
-    LOG:  autovacuum launcher shutting down
-    LOG:  shutting down
-    LOG:  database system is shut down
+    psql (9.2.0)
+    Type "help" for help.
 
-    ~$ pgvm cluster stop my_another_cluster
-    stoping cluster my_another_cluster@9.1.5
-    LOG:  received smart shutdown request
-    LOG:  autovacuum launcher shutting down
-    LOG:  shutting down
-    LOG:  database system is shut down
+    postgres=#
 
-    ~$ pgvm use 9.2beta2
-    switched to 9.2beta2
+Or you can redirect commands to:
 
-    ~$ pgvm list
-    PostgreSQL Installed Version:
+    $ echo "select version()" | pgvm console latin1_cluster@8.4.11
+    connecting to cluster 'test' on port '5435' ...
 
-        PostgreSQL 8.3.19  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-        PostgreSQL 8.4.11  [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-        PostgreSQL 9.1.5   [ ELF 64-bit LSB executable, x86-64, version 1 (SYSV) ]
-
-    ~$ pgvm uninstall 9.1.5
-    Removing Postgres version 9.1.5 installed and your source by pgvm!
-
-    ~$ pgvm uninstall 8.4.11 --purge
-    Removing Postgres version 8.4.11 installed and your source by pgvm!
-
-    ~$ pgvm uninstall --all --purge
-    Removing the following Postgres versions sources and installed by pgvm!
-
-    8.3.19
-    9.2beta2
+                                               version
+    ----------------------------------------------------------------------------------------------
+     PostgreSQL 8.4.11 on x86_64-unknown-linux-gnu, compiled by gcc (Debian 4.7.2-1) 4.7.2, 64-bit
+    (1 row)
 
 
 Dependencies

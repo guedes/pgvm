@@ -29,8 +29,8 @@ $pgvm_home/environments/8.4.11/bin/pg_config
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^    PostgreSQL 9.2.0 .+$/
-#match=/^    PostgreSQL 8.4.11 .+$/
+#match=/^    9.2.0/
+#match=/^    8.4.11/
 
 
 ## testing uninstalled versions
@@ -53,8 +53,8 @@ pgvm current
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^ => PostgreSQL 9.2.0 .+$/
-#match=/^    PostgreSQL 8.4.11 .+$/
+#match=/^ => 9.2.0/
+#match=/^    8.4.11/
 
 pgvm cluster list
 #status=1
@@ -83,8 +83,8 @@ pgvm current
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^    PostgreSQL 9.2.0 .+$/
-#match=/^ => PostgreSQL 8.4.11 .+$/
+#match=/^    9.2.0/
+#match=/^ => 8.4.11/
 
 pgvm cluster list
 #status=1
@@ -180,3 +180,82 @@ pgvm cluster remove to_be_removed --force
 #status=0
 #match=/stopping cluster to_be_removed@9.2.0/
 #match=/removing 'to_be_removed' directory '.+\/clusters\/9.2.0\/to_be_removed' ... ok/
+
+pgvm install master
+#status=0
+#match=/^configuring PostgreSQL Version: master ... done.$/
+#match=/^compiling ... done.$/
+#match=/^installing ... done.$/
+
+pgvm use master
+#status=0
+#match=/^switched to master$/
+
+pgvm cluster create cl_test_master
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/master\/cl_test_master'... ok!$/
+
+pgvm cluster start cl_test_master
+#status=0
+#match=/^starting cluster cl_test_master@master$/
+
+pgvm cluster list
+#status=0
+#match=/^cluster in current enviroment \(master\):$/
+#match=/^    cl_test_master  is online  at port 5437$/
+
+pgvm install 088c065
+#status=0
+#match=/^configuring PostgreSQL Version: 088c065 ... done.$/
+#match=/^compiling ... done.$/
+#match=/^installing ... done.$/
+
+pgvm use 088c065
+#status=0
+#match=/^switched to 088c065$/
+
+pgvm cluster create cl_test_other
+#status=0
+#match=/^initializing cluster in '.+\/clusters\/088c065\/cl_test_other'... ok!$/
+
+pgvm cluster start cl_test_other
+#status=0
+#match=/^starting cluster cl_test_other@088c065$/
+
+pgvm cluster list
+#status=0
+#match=/^cluster in current enviroment \(088c065\):$/
+#match=/^    cl_test_other  is online  at port 5438$/
+
+echo "select version()" | pgvm console my_cluster@9.2.0
+#status=1
+#match=/the cluster 'my_cluster' seems to be offline/
+
+echo "select version()" | pgvm console test@8.4.11
+#status=1
+#match=/the cluster 'test' seems to be offline/
+
+pgvm use 9.2.0
+pgvm cluster start my_cluster
+pgvm use 8.4.11
+pgvm cluster start test
+pgvm use master
+echo "select version()" | pgvm console my_cluster@9.2.0
+#status=0
+#match=/PostgreSQL 9.2.0/
+
+echo "select version()" | pgvm console test@8.4.11
+#status=0
+#match=/PostgreSQL 8.4.11/
+
+pgvm use 9.2.0
+echo "select version()" | pgvm console my_cluster
+#status=0
+#match=/PostgreSQL 9.2.0/
+pgvm cluster stop my_cluster
+
+pgvm use 8.4.11
+echo "select version()" | pgvm console test
+#status=0
+#match=/PostgreSQL 8.4.11/
+pgvm cluster stop test

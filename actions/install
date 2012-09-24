@@ -50,9 +50,20 @@ Usage: pgvm install <version>
 
 install()
 {
-	version=$1
+  version=$1
 
-	get_postgres
-	extract_postgres
+  if seems_to_be_from_repo "$version"
+  then
+    if local_repo_exists
+    then
+      checkout_postgres $version
+    else
+      clone_postgres
+    fi
+  else
+    get_postgres
+    extract_postgres
+  fi
+
 	compile_and_install_postgres
 }

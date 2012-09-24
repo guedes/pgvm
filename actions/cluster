@@ -185,9 +185,10 @@ cluster_ctl()
 
 cluster_human_status()
 {
+    [[ -z "$1" ]] && echo "please, choose a cluster" && exit 1
+
     cluster_name=$1
-    cluster_version=$2
-    [[ -z "$cluster_version" ]] && cluster_version=$(current)
+    cluster_version=${2:-$(current)}
     cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
@@ -196,9 +197,10 @@ cluster_human_status()
 
 cluster_port()
 {
+    [[ -z "$1" ]] && echo "please, choose a cluster" && exit 1
+
     cluster_name=$1
-    cluster_version=$2
-    [[ -z "$cluster_version" ]] && cluster_version=$(current)
+    cluster_version=${2:-$(current)}
     cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
