@@ -162,17 +162,23 @@ cluster_ctl()
 
 cluster_human_status()
 {
+    [[ -z "$1" ]] && echo "please, choose a cluster" && exit 1
+
     cluster_name=$1
-    cluster_top_dir="$pgvm_home/clusters/$(current)"
+    cluster_version=${2:-$(current)}
+    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
-    $pgvm_home/environments/current/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
+    $pgvm_home/environments/$cluster_version/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
 }
 
 cluster_port()
 {
+    [[ -z "$1" ]] && echo "please, choose a cluster" && exit 1
+
     cluster_name=$1
-    cluster_top_dir="$pgvm_home/clusters/$(current)"
+    cluster_version=${2:-$(current)}
+    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
     cluster_port=$(egrep "^\s*port\s*=" $cluster_dir/postgresql.conf)

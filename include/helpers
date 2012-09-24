@@ -150,6 +150,40 @@ download()
   $download_cmd 2>/dev/null
 }
 
+seems_to_be_from_repo()
+{
+  version=${1:-$version}
+  echo $version | egrep -v "^[0-9](\.[0-9]+)*([a-z]+[0-9]*)?$" &>/dev/null
+  [[ $? -eq 0 ]]
+}
+
+local_repo_exists()
+{
+  pg_dest_dir=$pgvm_home/src/postgresql-clone
+  cd $pg_dest_dir && grep -i postgresql README &>/dev/null && git status &>/dev/null
+}
+
+checkout_postgres()
+{
+  version=$1
+  pg_clone_dir=$pgvm_home/src/postgresql-clone
+  cd $pg_clone_dir && git checkout $version &>/dev/null && git clean -f &>/dev/null
+
+  [[ $? -eq 1 ]] && echo "the branch '$version' seems to be invalid." && exit 1
+}
+
+clone_postgres()
+{
+  pg_dest_dir=$pgvm_home/src
+  pg_url=$(git_repo_url $version)
+
+  echo "getting postgres from '$pg_url'"
+
+  mkdir -p $pg_dest_dir
+
+  git clone $pg_url $pg_dest_dir/postgresql-clone
+}
+
 get_postgres()
 {
    version=${1:-$version}
@@ -203,8 +237,16 @@ compile_and_install_postgres()
    version=${1:-$version}
    configure_options=${CONFIG_OPTS}
    make_options=${MAKE_OPTS}
+   pg_dest_dir=$pgvm_home/src
 
-   pg_dest_dir=$pgvm_home/src/postgresql-$version
+   if seems_to_be_from_repo $version
+   then
+     pg_dest_dir=$pg_dest_dir/postgresql-clone
+     cd $pg_dest_dir
+     make clean 1>make-clean.clean.log 2>make-clean.error.log
+   else
+     pg_dest_dir=$pg_dest_dir/postgresql-$version
+   fi
 
    cd $pg_dest_dir
    mkdir -p $pgvm_home/environments/$version

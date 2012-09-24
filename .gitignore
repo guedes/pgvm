@@ -1,3 +1,5 @@
 *.sw?
 environments
 src
+cluster
+logs

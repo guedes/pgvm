@@ -21,18 +21,42 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
-postgres_download_url()
+source $pgvm_home/actions/cluster
+
+usage()
 {
-	version=$1
-	echo "http://ftp.postgresql.org/pub/source/v$version/postgresql-$version.tar.gz"
+    echo """
+Starts psql and connects to a specified cluster.
+
+Usage: pgvm console <cluster_name>[@version]
+
+  Examples:
+           pgvm console some_cluster
+           pgvm console test@9.1.5
+           pgvm console other_cluster@9.2.0
+           echo "select * from pg_stat_activity" | pgvm console some_cluster
+"""
 }
 
-postgres_version_url()
+console()
 {
-	echo http://www.postgresql.org/versions.rss
-}
+    [[ -z "$1" ]] && echo "please, choose a cluster to connect" && exit 1
 
-git_repo_url()
-{
-  echo git://git.postgresql.org/git/postgresql.git
+    if echo $1 | grep @ >/dev/null
+    then
+      cluster_name=$(echo $1|cut -d@ -f1)
+      cluster_version=$(echo $1|cut -d@ -f2)
+    else
+      cluster_name=$1
+    fi
+
+    cluster_version=${cluster_version:-"$(current)"}
+
+    [[ "$(cluster_human_status $cluster_name $cluster_version)" == "offline" ]] && echo "the cluster '$cluster_name' seems to be offline" && exit 1
+
+    port=$(cluster_port $cluster_name $cluster_version)
+
+    echo "connecting to cluster '$cluster_name' on port '$port' ..."
+    echo
+    $pgvm_home/environments/$cluster_version/bin/psql -p $port -d postgres
 }
