@@ -30,12 +30,12 @@ list()
 
 	echo -e "PostgreSQL Installed Version:\n"
 
-	current=$(readlink $pgvm_home/environments/current)
+	current_path=$(readlink $pgvm_home/environments/current)
 
 	for path in ${VERSIONS}
 	do
 		is_current=""
-		[[ $current == $path ]] && is_current="=>"
+		[[ "$current_path" == "$path" ]] && is_current="=>"
 
 		postgres_executable=$path/bin/postgres
 		pg_config=$path/bin/pg_config
