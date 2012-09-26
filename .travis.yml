@@ -7,7 +7,6 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#pgvm"
-      - "irc.freenode.org#postgresql-br"
   email:
     recipients:
       - guedes@guedesoft.net

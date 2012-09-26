@@ -50,7 +50,7 @@ console()
       cluster_name=$1
     fi
 
-    cluster_version=${cluster_version:-"$(current)"}
+    cluster_version=${cluster_version:-"$(current_version)"}
 
     [[ "$(cluster_human_status $cluster_name $cluster_version)" == "offline" ]] && echo "the cluster '$cluster_name' seems to be offline" && exit 1
 

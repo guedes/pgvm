@@ -23,21 +23,29 @@
 
 usage()
 {
-	echo """
+    echo """
 Shows the current PostgreSQL version in use.
 
 Use: pgvm current
 """
 }
 
+current_version()
+{
+    if [ -L $pgvm_home/environments/current ]; then
+      current_dir=$(readlink $pgvm_home/environments/current)
+      current_version=$(basename $current_dir)
+
+      echo $current_version
+    else
+      echo no_version_installed
+    fi
+}
+
 current()
 {
-	if [ -L $pgvm_home/environments/current ]; then
-    current_dir=$(readlink $pgvm_home/environments/current)
-	  current_version=$(basename $current_dir)
+    current_version=$(current_version)
+    [[ "$current_version" == "no_version_installed" ]] && echo "Please, install a PostgreSQL Version!" && exit 1
 
-	  echo $current_version
-  else
-    echo "Please, install a PostgreSQL Version!"
-  fi
+    echo $current_version
 }

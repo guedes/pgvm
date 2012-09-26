@@ -79,7 +79,7 @@ remove()
   elif [ -d $pgvm_home/src/postgresql-$version ]
   then
 
-    current=$(current)
+    current=$(current_version)
     if [ "$current" == "$version" ] && [ $force -eq 1 ]
     then
       rm -f $pgvm_home/environments/current
