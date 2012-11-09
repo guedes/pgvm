@@ -153,7 +153,7 @@ pgvm cluster start my_another_cluster
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.0\):$/
+#match=/^cluster in current enviroment \(9.2.1\):$/
 #match=/^    my_another_cluster is online  at port 5436$/
 #match=/^    my_cluster         is online  at port 5435$/
 
