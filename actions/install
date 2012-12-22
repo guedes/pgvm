@@ -51,8 +51,7 @@ Usage: pgvm install <version>
 install()
 {
   version=$1
-  echo $version 
-  if [ $version -z ] 
+  if [ -z $version ] 
   then
 	usage
   	exit
