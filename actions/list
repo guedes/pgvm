@@ -24,7 +24,7 @@
 list()
 {
 
-	VERSIONS=$(ls -1 -d $pgvm_home/environments/ 2>/dev/null | grep -v current 2> /dev/null)
+	VERSIONS=$(ls -1 -d $pgvm_home/environments/* 2>/dev/null | grep -v current 2> /dev/null)
 
 	[[ -z $VERSIONS ]] && echo -e "Please, install a PostgreSQL Version!\n" && exit 0
 
