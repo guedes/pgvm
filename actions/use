@@ -41,8 +41,15 @@ TIP: you can use 'pgvm list' to see the PostgreSQL
 use()
 {
 	version=$1
-	[[ "x$version" == "x" ]] && usage && exit
+	version_length=$(echo $version|wc -c)
 
+	if [ $version_length -eq 4 ]
+	then
+		version=$(pgvm list|sed s/.\=\>//|egrep $version|sort |tail -n1)
+	fi
+
+	[[ "x$version" == "x" ]] && usage && exit
+	
 	version_is_installed $version && create_symlinks || {
 		echo "version $version is not installed"
 		exit 1
