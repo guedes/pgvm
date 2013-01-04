@@ -191,10 +191,10 @@ get_postgres()
 
    if [ $version_length -eq 4 ]
    then
-      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep $version)
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed -E "s/^.+([0-9]\.[0-9]+\.[0-9]+) is the latest release in the ([0-9]\.[0-9]+).+$/\1/" | grep $version)
    elif [ $version_length -eq 2 ]
    then
-      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep ^"$version"|head -n1)
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed -E "s/^.+([0-9]\.[0-9]+\.[0-9]+) is the latest release in the ([0-9]\.[0-9]+).+$/\1/" | grep ^"$version" | head -n1)
    fi
 
    pg_dest_dir=$pgvm_home/src
