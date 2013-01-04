@@ -48,7 +48,7 @@ use()
 		version=$(pgvm list|sed s/.\=\>//|egrep $version|sort |tail -n1)
 	fi
 
-	[[ "x$version" == "x" ]] && usage && exit
+	[[ "x$version" == "x" ]] && usage && exit 1
 	
 	version_is_installed $version && create_symlinks || {
 		echo "version $version is not installed"
