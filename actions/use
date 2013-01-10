@@ -42,8 +42,7 @@ use()
 {
 	version=$1
 	version_length=$(echo $version|wc -c)
-
-	if [ $version_length -eq 4 ]
+	if [[ $(echo ${#version}) -eq 3 || $(echo ${#version}) -eq 1 ]]
 	then
 		version=$(pgvm list|sed s/.\=\>//|egrep $version|sort |tail -n1)
 	fi
