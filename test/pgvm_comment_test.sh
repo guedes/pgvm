@@ -39,6 +39,8 @@ pgvm use 999
 #status=1
 
 pgvm use 1
+#status=1
+
 
 ## testing version 9.2.2
 
