@@ -14,7 +14,7 @@ pgvm list
 
 pgvm install 9
 #status=0
-#match=/^configuring PostgreSQL Version: 9.2.1 ... done.$/
+#match=/^configuring PostgreSQL Version: 9.2.2 ... done.$/
 #match=/^compiling ... done.$/
 #match=/^installing ... done.$/
 
@@ -29,7 +29,7 @@ $pgvm_home/environments/8.4.12/bin/pg_config
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^    9.2.1/
+#match=/^    9.2.2/
 #match=/^    8.4.12/
 
 
@@ -40,34 +40,34 @@ pgvm use 999
 
 pgvm use 1
 
-## testing version 9.2.1
+## testing version 9.2.2
 
-pgvm use 9.2.1
+pgvm use 9.2.2
 #status=0
-#match=/^switched to 9.2.1$/
+#match=/^switched to 9.2.2$/
 
 pgvm current
 #status=0
-#match=/^9.2.1$/
+#match=/^9.2.2$/
 
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^ => 9.2.1/
+#match=/^ => 9.2.2/
 #match=/^    8.4.12/
 
 pgvm cluster list
 #status=1
-#match=/^there is no clusters in current environment \(9.2.1\)$/
+#match=/^there is no clusters in current environment \(9.2.2\)$/
 
 pg_config --configure --version
 #status=0
-#match=/--prefix=.+\/environments/9.2.1/
-#match=/PostgreSQL 9.2.1/
+#match=/--prefix=.+\/environments/9.2.2/
+#match=/PostgreSQL 9.2.2/
 
 psql --version
 #status=0
-#match=/^psql \(PostgreSQL\) 9.2.1$/
+#match=/^psql \(PostgreSQL\) 9.2.2$/
 
 
 ## testing version 8.4.12
@@ -83,7 +83,7 @@ pgvm current
 pgvm list
 #status=0
 #match=/^PostgreSQL Installed Version:$/
-#match=/^    9.2.1/
+#match=/^    9.2.2/
 #match=/^ => 8.4.12/
 
 pgvm cluster list
@@ -120,40 +120,40 @@ pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
 #status=0
 #match=/^initializing cluster in '.+\/clusters\/8.4.12\/latin1_cluster'... ok!$/
 
-## testing clusters in 9.2.1
+## testing clusters in 9.2.2
 
-pgvm use 9.2.1
+pgvm use 9.2.2
 #status=0
-#match=/^switched to 9.2.1$/
+#match=/^switched to 9.2.2$/
 
 pgvm cluster list
 #status=1
-#match=/^there is no clusters in current environment \(9.2.1\)$/
+#match=/^there is no clusters in current environment \(9.2.2\)$/
 
 pgvm cluster create my_cluster
 #status=0
-#match=/^initializing cluster in '.+\/clusters\/9.2.1\/my_cluster'... ok!$/
+#match=/^initializing cluster in '.+\/clusters\/9.2.2\/my_cluster'... ok!$/
 
 pgvm cluster start my_cluster
 #status=0
-#match=/^starting cluster my_cluster@9.2.1$/
+#match=/^starting cluster my_cluster@9.2.2$/
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.1\):$/
+#match=/^cluster in current enviroment \(9.2.2\):$/
 #match=/^    my_cluster  is online  at port 5435$/
 
 pgvm cluster create my_another_cluster
 #status=0
-#match=/^initializing cluster in '.+\/clusters\/9.2.1\/my_another_cluster'... ok!$/
+#match=/^initializing cluster in '.+\/clusters\/9.2.2\/my_another_cluster'... ok!$/
 
 pgvm cluster start my_another_cluster
 #status=0
-#match=/^starting cluster my_another_cluster@9.2.1$/
+#match=/^starting cluster my_another_cluster@9.2.2$/
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.1\):$/
+#match=/^cluster in current enviroment \(9.2.2\):$/
 #match=/^    my_another_cluster is online  at port 5436$/
 #match=/^    my_cluster         is online  at port 5435$/
 
@@ -164,14 +164,14 @@ pgvm cluster stop test
 #status=0
 #match=/stopping cluster test@8.4.12/
 
-pgvm use 9.2.1
+pgvm use 9.2.2
 pgvm cluster stop my_cluster
 #status=0
-#match=/stopping cluster my_cluster@9.2.1/
+#match=/stopping cluster my_cluster@9.2.2/
 
 pgvm cluster stop my_another_cluster
 #status=0
-#match=/stopping cluster my_another_cluster@9.2.1/
+#match=/stopping cluster my_another_cluster@9.2.2/
 
 pgvm cluster create to_be_removed
 pgvm cluster start to_be_removed
@@ -181,8 +181,8 @@ pgvm cluster remove to_be_removed
 
 pgvm cluster remove to_be_removed --force
 #status=0
-#match=/stopping cluster to_be_removed@9.2.1/
-#match=/removing 'to_be_removed' directory '.+\/clusters\/9.2.1\/to_be_removed' ... ok/
+#match=/stopping cluster to_be_removed@9.2.2/
+#match=/removing 'to_be_removed' directory '.+\/clusters\/9.2.2\/to_be_removed' ... ok/
 
 pgvm install master
 #status=0
@@ -230,7 +230,7 @@ pgvm cluster list
 #match=/^cluster in current enviroment \(088c065\):$/
 #match=/^    cl_test_other  is online  at port 5438$/
 
-echo "select version()" | pgvm console my_cluster@9.2.1
+echo "select version()" | pgvm console my_cluster@9.2.2
 #status=1
 #match=/the cluster 'my_cluster' seems to be offline/
 
@@ -238,23 +238,23 @@ echo "select version()" | pgvm console test@8.4.12
 #status=1
 #match=/the cluster 'test' seems to be offline/
 
-pgvm use 9.2.1
+pgvm use 9.2.2
 pgvm cluster start my_cluster
 pgvm use 8.4.12
 pgvm cluster start test
 pgvm use master
-echo "select version()" | pgvm console my_cluster@9.2.1
+echo "select version()" | pgvm console my_cluster@9.2.2
 #status=0
-#match=/PostgreSQL 9.2.1/
+#match=/PostgreSQL 9.2.2/
 
 echo "select version()" | pgvm console test@8.4.12
 #status=0
 #match=/PostgreSQL 8.4.12/
 
-pgvm use 9.2.1
+pgvm use 9.2.2
 echo "select version()" | pgvm console my_cluster
 #status=0
-#match=/PostgreSQL 9.2.1/
+#match=/PostgreSQL 9.2.2/
 pgvm cluster stop my_cluster
 
 pgvm use 8.4.12

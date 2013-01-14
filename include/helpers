@@ -160,7 +160,7 @@ seems_to_be_from_repo()
 local_repo_exists()
 {
   pg_dest_dir=$pgvm_home/src/postgresql-clone
-  cd $pg_dest_dir && grep -i postgresql README &>/dev/null && git status &>/dev/null
+  cd $pg_dest_dir 2>/dev/null && grep -i postgresql README &>/dev/null && git status &>/dev/null
 }
 
 checkout_postgres()

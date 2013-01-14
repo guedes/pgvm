@@ -93,7 +93,7 @@ list()
 
     [[ -z "$clusters" ]] && echo "there is no clusters in current environment (${current})" && exit 1
 
-    echo -e "cluster in current enviroment (${current}):\n"
+    echo -e "cluster in current environment (${current}):\n"
 
     max_length=$(echo $clusters | awk 'BEGIN { RS = " " } ; { print length() }' | sort -n | tail -1)
 
