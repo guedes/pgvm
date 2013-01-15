@@ -38,8 +38,8 @@ pgvm list
 pgvm use 999
 #status=1
 
-pgvm use 1
-#status=1
+pgvm use 4
+#match=/^version 4 is not installed$
 
 
 ## testing version 9.2.2
