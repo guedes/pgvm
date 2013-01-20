@@ -68,8 +68,8 @@ create()
 
     [[ -d "$cluster_dir" ]] && echo "cluster '${cluster_dir}' already exists!" && exit 1
 
-    mkdir --parents $cluster_top_dir
-    mkdir --parents $pgvm_home/logs
+    mkdir -p $cluster_top_dir
+    mkdir -p $pgvm_home/logs
 
     echo -n "initializing cluster in '$cluster_dir'... "
     $pgvm_home/environments/current/bin/initdb -D $cluster_dir $initdb_options 1> $pgvm_home/logs/install.$cluster_name@${current}.log 2>$pgvm_home/logs/install.$cluster_name@${current}.error.log
