@@ -1,6 +1,6 @@
 ## prepare environment
 export pgvm_home=`pwd`
-export LC_ALL="en_US.UTF-8"
+export LC_ALL="en_US"
 export PATH="$pgvm_home/bin:$pgvm_home/environments/current/bin:/bin:/usr/bin"
 export MAKE_OPTS="-j 10"
 
@@ -115,9 +115,9 @@ pgvm cluster list
 #match=/^cluster in current environment \(8.4.12\):$/
 #match=/^    test  is online  at port 5433$/
 
-pgvm cluster create unicode_cluster --encoding=unicode --locale=en_US.UTF-8
+pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
 #status=0
-#match=/^initializing cluster in '.+\/clusters\/8.4.12\/unicode_cluster'... ok!$/
+#match=/^initializing cluster in '.+\/clusters\/8.4.12\/latin1_cluster'... ok!$/
 
 ## testing clusters in 9.2.2
 
