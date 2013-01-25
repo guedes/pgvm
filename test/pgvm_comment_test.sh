@@ -113,7 +113,7 @@ pgvm cluster start test
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(8.4.12\):$/
+#match=/^cluster in current environment \(8.4.12\):$/
 #match=/^    test  is online  at port 5433$/
 
 pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
@@ -140,7 +140,7 @@ pgvm cluster start my_cluster
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.2\):$/
+#match=/^cluster in current environment \(9.2.2\):$/
 #match=/^    my_cluster  is online  at port 5435$/
 
 pgvm cluster create my_another_cluster
@@ -153,7 +153,7 @@ pgvm cluster start my_another_cluster
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(9.2.2\):$/
+#match=/^cluster in current environment \(9.2.2\):$/
 #match=/^    my_another_cluster is online  at port 5436$/
 #match=/^    my_cluster         is online  at port 5435$/
 
@@ -204,7 +204,7 @@ pgvm cluster start cl_test_master
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(master\):$/
+#match=/^cluster in current environment \(master\):$/
 #match=/^    cl_test_master  is online  at port 5437$/
 
 pgvm install 088c065
@@ -227,7 +227,7 @@ pgvm cluster start cl_test_other
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(088c065\):$/
+#match=/^cluster in current environment \(088c065\):$/
 #match=/^    cl_test_other  is online  at port 5438$/
 
 echo "select version()" | pgvm console my_cluster@9.2.2
@@ -283,7 +283,7 @@ pgvm cluster start cl_test_rel92_stable
 
 pgvm cluster list
 #status=0
-#match=/^cluster in current enviroment \(REL9_2_STABLE\):$/
+#match=/^cluster in current environment \(REL9_2_STABLE\):$/
 #match=/^    cl_test_rel92_stable  is online  at port 5439$/
 
 pgvm cluster stop cl_test_rel92_stable
