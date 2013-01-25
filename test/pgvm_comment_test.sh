@@ -37,6 +37,7 @@ pgvm list
 
 pgvm use 999
 #status=1
+#match=/^version 999 is not installed$/
 
 
 ## testing version 9.2.2
