@@ -118,7 +118,7 @@ pgvm cluster list
 #match=/^cluster in current environment \(8.4.12\):$/
 #match=/^    test  is online  at port 5433$/
 
-pgvm cluster create unicode_cluster --encoding=latin1 --locale=en_US
+pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
 #status=0
 #match=/^initializing cluster in '.+\/clusters\/8.4.12\/latin1_cluster'... ok!$/
 
