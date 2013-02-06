@@ -21,6 +21,8 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+source $pgvm_home/include/sites
+
 usage()
 {
 	echo """
@@ -43,12 +45,11 @@ use()
 	version=$1
 	if [[ $(echo ${#version}) -eq 3 ]]
 	then
-		version=$(pgvm list|sed s/.\=\>//|egrep $version|sort |tail -n1)
+		list_last
 	elif [[ $(echo ${#version}) -eq 1 \
 		&& $(pgvm list|sed s/.\=\>//|cut -d "." -f 1|egrep ${version}) ]] 
 	then
-		version=$(pgvm list|sed s/.\=\>//|egrep ${version}|sort | tail -n1)
-		
+	    list_last
 	fi
 
 	[[ "x$version" == "x" ]] && usage && exit 1
