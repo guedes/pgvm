@@ -1,6 +1,11 @@
 language: ruby
 rvm:
   - 1.9.3
+before_install:
+ - sudo locale-gen en_US
+ - sudo update-locale LANG=en_US
+
+# - sudo dpkg-reconfigure -fnoninteractive locales
 install: gem install tf -v '>=0.4.1'
 script: 'tf --text test/pgvm_comment_test.sh'
 notifications:
