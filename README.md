@@ -18,6 +18,10 @@ Then open a new terminal or type:
 
 and voilà!
 
+If you want to install it in another directory you could pass it to `--pgvm-home` like this:
+
+    curl -s -L https://raw.github.com/guedes/pgvm/master/bin/pgvm-self-install  | bash -s -- --pgvm-home=/usr/local/pgvm
+
 An example session
 ------------------
 

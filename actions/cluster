@@ -156,6 +156,11 @@ remove()
     echo "erro!"
 }
 
+first_online_cluster()
+{
+    pgvm cluster list | grep online | awk '{ print $1; }' | head -1
+}
+
 cluster_ctl()
 {
     action=$1

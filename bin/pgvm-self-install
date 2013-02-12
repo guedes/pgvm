@@ -25,24 +25,24 @@ ACTUAL_DIR=`pwd`
 
 clone_repo()
 {
-	git clone git://github.com/guedes/pgvm.git $HOME/.pgvm
+	git clone git://github.com/guedes/pgvm.git $pgvm_home
 }
 
 update_repo()
 {
-	cd $HOME/.pgvm
+	cd $pgvm_home
 	git pull origin master
 }
 
 force_clone_repo()
 {
-	rm -rf $HOME/.pgvm
+	rm -rf $pgvm_home
 	clone_repo
 }
 
 set_bashrc_env()
 {
-	pgvm_home="export pgvm_home=\$HOME/.pgvm"
+	pgvm_home="export pgvm_home=\$pgvm_home"
 	path="export PATH=\$pgvm_home/bin:\$PATH"
 	path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
 
@@ -54,7 +54,24 @@ set_bashrc_env()
 	fi
 }
 
-if [ -d $HOME/.pgvm ]
+# stolen from helpers
+parse_options()
+{
+  for opt in $*
+  do
+    opt=$(echo $opt | sed 's/--/opt_/g' | sed 's/-/_/g')
+    value=$(echo $opt | cut -s -d'=' -f2)
+    opt=$(echo $opt | cut -d'=' -f1)
+    value=${value:-1}
+    eval "export $opt=$value"
+  done
+}
+
+parse_options $*
+
+pgvm_home=${opt_pgvm_home:-"$HOME/.pgvm"}
+
+if [ -d $pgvm_home ]
 then
 	if [ "x$1" == "x--force" ]
 	then
