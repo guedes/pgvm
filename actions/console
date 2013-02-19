@@ -31,6 +31,7 @@ Starts psql and connects to a specified cluster.
 Usage: pgvm console <cluster_name>[@version]
 
   Examples:
+           pgvm console
            pgvm console some_cluster
            pgvm console test@9.1.5
            pgvm console other_cluster@9.2.0
