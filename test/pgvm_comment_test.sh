@@ -1,7 +1,7 @@
 ## prepare environment
 export pgvm_home=`pwd`
 export LC_ALL="en_US"
-export PATH="$pgvm_home/bin:$pgvm_home/environments/current/bin:/bin:/usr/bin"
+export PATH="$pgvm_home/bin:$pgvm_home/environments/current/bin:/bin:/usr/bin:/sbin"
 export MAKE_OPTS="-j 10"
 
 ## testing presence of installed versions
@@ -116,7 +116,7 @@ pgvm cluster list
 #match=/^cluster in current environment \(8.4.19\):$/
 #match=/^    test  is online  at port 5433$/
 
-pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US
+pgvm cluster create latin1_cluster --encoding=latin1 --locale=en_US.iso8859-1
 #status=0
 #match=/^initializing cluster in '.+\/clusters\/8.4.19\/latin1_cluster'... ok!$/
 
