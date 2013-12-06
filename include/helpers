@@ -191,10 +191,10 @@ get_postgres()
 
    if [ $version_length -eq 4 ]
    then
-      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep $version)
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed -E "s/^.+([0-9]\.[0-9]+\.[0-9]+) is the latest release in the ([0-9]\.[0-9]+).+$/\1/" | grep $version)
    elif [ $version_length -eq 2 ]
    then
-      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed "s/^.*\([0-9]\.[0-9]\+\.[0-9]\+\) is the latest release in the \([0-9]\.[0-9]\+\).*/\1/" |grep ^"$version"|head -n1)
+      version=$(download http://www.postgresql.org/versions.rss - | grep "is the latest release in the" | sed -E "s/^.+([0-9]\.[0-9]+\.[0-9]+) is the latest release in the ([0-9]\.[0-9]+).+$/\1/" | grep ^"$version" | head -n1)
    fi
 
    pg_dest_dir=$pgvm_home/src
@@ -278,8 +278,9 @@ create_symlinks()
    check_env
 
    version=${1:-$version}
-   mkdir --parents $pgvm_home/environments
-   ln --no-dereference --force --symbolic $pgvm_home/environments/$version $pgvm_home/environments/current
+   mkdir -p $pgvm_home/environments
+   rm -f $pgvm_home/environments/current
+   ln -s $pgvm_home/environments/$version $pgvm_home/environments/current
    builtin hash -r
 }
 
