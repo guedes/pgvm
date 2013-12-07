@@ -25,7 +25,11 @@ ACTUAL_DIR=`pwd`
 
 clone_repo()
 {
-	git clone git://github.com/guedes/pgvm.git $pgvm_home
+  echo
+  echo -n "wait while the installer fetches pgvm's files ..."
+  git clone git://github.com/guedes/pgvm.git $pgvm_home 2> /dev/null
+
+  [[ $? -eq 0 ]] && echo "done" || echo "sorry, pgvm could not be installed"
 }
 
 update_repo()
@@ -42,16 +46,45 @@ force_clone_repo()
 
 set_bashrc_env()
 {
-	pgvm_home="export pgvm_home=$pgvm_home"
-	path="export PATH=\$pgvm_home/bin:\$PATH"
-	path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
+  pgvm_home="export pgvm_home=$pgvm_home"
+  path="export PATH=\$pgvm_home/bin:\$PATH"
+  path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
 
-	if ! egrep "export (pgvm_home|PATH=\$pgvm_home)" $HOME/.bashrc >/dev/null
-	then
-		echo $pgvm_home >> $HOME/.bashrc
-		echo $path >> $HOME/.bashrc
-		echo $path_env >> $HOME/.bashrc
-	fi
+  if ! egrep "export (pgvm_home|PATH=\$pgvm_home)" $HOME/.bashrc >/dev/null
+  then
+    echo $pgvm_home >> $HOME/.bashrc
+    echo $path >> $HOME/.bashrc
+    echo $path_env >> $HOME/.bashrc
+  fi
+}
+
+set_bash_profile_env()
+{
+  pgvm_home="export pgvm_home=$pgvm_home"
+  path="export PATH=\$pgvm_home/bin:\$PATH"
+  path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
+
+  [[ -f $HOME/.bash_profile ]] || touch $HOME/.bash_profile
+
+  if ! egrep "export (pgvm_home|PATH=\$pgvm_home)" $HOME/.bash_profile >/dev/null
+  then
+    echo $pgvm_home >> $HOME/.bash_profile
+    echo $path >> $HOME/.bash_profile
+    echo $path_env >> $HOME/.bash_profile
+  fi
+}
+
+set_bash_env()
+{
+  echo -n "setting the environment ..."
+  case $OSTYPE in
+    darwin*) set_bash_profile_env ;;
+          *) set_bashrc_env ;;
+  esac
+
+  echo "done"; echo
+  sleep 1
+  echo "now you could open another terminal and type: pgvm help"
 }
 
 # stolen from helpers
@@ -71,6 +104,8 @@ parse_options $*
 
 pgvm_home=${opt_pgvm_home:-"$HOME/.pgvm"}
 
+echo "PostgreSQL version manager's installer"
+
 if [ -d $pgvm_home ]
 then
 	if [ "x$1" == "x--force" ]
@@ -87,4 +122,4 @@ else
 		clone_repo
 fi
 
-set_bashrc_env
+set_bash_env
