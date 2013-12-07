@@ -1,7 +1,17 @@
 ## prepare environment
-export pgvm_home=`pwd`
+pgvm_home=`pwd`
+pgvm_home=${pgvm_home}
+pgvm_logs=${pgvm_home}/logs
+pgvm_clusters=${pgvm_home}/clusters
+pgvm_environments=${pgvm_home}/environments
+
+export pgvm_home pgvm_logs pgvm_environments pgvm_clusters
+
+export PATH="/bin:/usr/bin:/sbin"
+export PATH=${pgvm_home}/bin:$PATH
+export PATH=${pgvm_environments}/current/bin:$PATH
+
 export LC_ALL="en_US"
-export PATH="$pgvm_home/bin:$pgvm_home/environments/current/bin:/bin:/usr/bin:/sbin"
 export MAKE_OPTS="-j 10"
 
 ## testing presence of installed versions
@@ -22,7 +32,7 @@ CONFIG_OPTS="--enable-cassert" pgvm install 8.4.19
 #status=0
 #match=/^configuring PostgreSQL Version: 8.4.19 ... done.$/
 
-$pgvm_home/environments/8.4.19/bin/pg_config
+${pgvm_environments}/8.4.19/bin/pg_config
 #status=0
 #match=/--enable-cassert/
 

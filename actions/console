@@ -70,5 +70,5 @@ console()
 
     echo "connecting to cluster '$cluster_name' on port '$port' ..."
     echo
-    $pgvm_home/environments/$cluster_version/bin/psql -p $port -d postgres
+    ${pgvm_environments}/$cluster_version/bin/psql -p $port -d postgres
 }

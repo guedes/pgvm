@@ -22,61 +22,67 @@
 # updates, enhancements, or modifications.
 
 ACTUAL_DIR=`pwd`
+STABLE_VERSION="tags/v0.2.0"
 
 clone_repo()
 {
   echo
   echo -n "wait while the installer fetches pgvm's files ..."
-  git clone git://github.com/guedes/pgvm.git $pgvm_home 2> /dev/null
+  git clone git://github.com/guedes/pgvm.git $pgvm_home > /dev/null 2>&1 || {
+    echo "sorry, pgvm could not be installed" && exit 1
+  }
 
-  [[ $? -eq 0 ]] && echo "done" || echo "sorry, pgvm could not be installed"
+  cd $pgvm_home && git checkout $STABLE_VERSION > /dev/null 2>&1 && echo " done" || {
+    echo "sorry, your git could not checkout from '$STABLE_VERSION'" && exit 1
+  }
+
 }
 
 update_repo()
 {
 	cd $pgvm_home
-	git pull origin master
+	git checkout $STABLE_VERSION > /dev/null 2>&1 && \
+      git pull origin $STABLE_VERSION > /dev/null 2>&1 || \
+        echo "sorry, pgvm could not checkout from '$STABLE_VERSION'"
 }
 
 force_clone_repo()
 {
-	rm -rf $pgvm_home
-	clone_repo
+  echo "DEPRECATED! Please use --update instead"
 }
 
 set_bashrc_env()
 {
-  pgvm_home="export pgvm_home=$pgvm_home"
-  path="export PATH=\$pgvm_home/bin:\$PATH"
-  path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
+  [[ -f $HOME/.bashrc ]] || touch $HOME/.bashrc
 
-  if ! egrep "export (pgvm_home|PATH=\$pgvm_home)" $HOME/.bashrc >/dev/null
-  then
-    echo $pgvm_home >> $HOME/.bashrc
-    echo $path >> $HOME/.bashrc
-    echo $path_env >> $HOME/.bashrc
-  fi
+  egrep "source .*pgvm_env.*" $HOME/.bashrc >/dev/null \
+    || echo "source ${pgvm_home}/pgvm_env" >> $HOME/.bashrc
 }
 
 set_bash_profile_env()
 {
-  pgvm_home="export pgvm_home=$pgvm_home"
-  path="export PATH=\$pgvm_home/bin:\$PATH"
-  path_env="export PATH=\$pgvm_home/environments/current/bin:\$PATH"
-
   [[ -f $HOME/.bash_profile ]] || touch $HOME/.bash_profile
 
-  if ! egrep "export (pgvm_home|PATH=\$pgvm_home)" $HOME/.bash_profile >/dev/null
-  then
-    echo $pgvm_home >> $HOME/.bash_profile
-    echo $path >> $HOME/.bash_profile
-    echo $path_env >> $HOME/.bash_profile
-  fi
+  egrep "source .*pgvm_env.*" $HOME/.bash_profile >/dev/null \
+    || echo "source ${pgvm_home}/pgvm_env" >> $HOME/.bash_profile
 }
 
 set_bash_env()
 {
-  echo -n "setting the environment ..."
+  echo -n "setting up the environment ..."
+
+  cat > ${pgvm_home}/pgvm_env <<EOF
+pgvm_home=${pgvm_home}
+pgvm_logs=${pgvm_logs}
+pgvm_clusters=${pgvm_clusters}
+pgvm_environments=${pgvm_environments}
+
+export pgvm_home pgvm_logs pgvm_environments pgvm_clusters
+
+export PATH=\${pgvm_home}/bin:\$PATH
+export PATH=\${pgvm_environments}/current/bin:\$PATH
+EOF
+
   case $OSTYPE in
     darwin*) set_bash_profile_env ;;
           *) set_bashrc_env ;;
@@ -103,6 +109,9 @@ parse_options()
 parse_options $*
 
 pgvm_home=${opt_pgvm_home:-"$HOME/.pgvm"}
+pgvm_logs=${opt_pgvm_logs:-"\${pgvm_home}/logs"}
+pgvm_clusters=${opt_pgvm_clusters:-"\${pgvm_home}/clusters"}
+pgvm_environments=${opt_pgvm_environments:-"\${pgvm_home}/environments"}
 
 echo "PostgreSQL version manager's installer"
 

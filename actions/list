@@ -24,13 +24,13 @@
 list()
 {
 
-	VERSIONS=$(ls -1 -d $pgvm_home/environments/* 2>/dev/null | grep -v current 2> /dev/null)
+	VERSIONS=$(ls -1 -d ${pgvm_environments}/* 2>/dev/null | grep -v current 2> /dev/null)
 
 	[[ -z $VERSIONS ]] && echo -e "Please, install a PostgreSQL Version!\n" && exit 0
 
 	echo -e "PostgreSQL Installed Version:\n"
 
-	current_path=$(readlink $pgvm_home/environments/current)
+	current_path=$(readlink ${pgvm_environments}/current)
 
 	for path in ${VERSIONS}
 	do

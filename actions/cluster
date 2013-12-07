@@ -63,20 +63,20 @@ create()
 
     [[ -z "$cluster_name" ]] && echo "please, choose a name for cluster!" && exit 1
 
-    cluster_top_dir="$pgvm_home/clusters/${current}"
+    cluster_top_dir="${pgvm_clusters}/${current}"
     cluster_dir="${cluster_top_dir}/${cluster_name}"
 
     [[ -d "$cluster_dir" ]] && echo "cluster '${cluster_dir}' already exists!" && exit 1
 
     mkdir -p $cluster_top_dir
-    mkdir -p $pgvm_home/logs
+    mkdir -p $pgvm_logs
 
     echo -n "initializing cluster in '$cluster_dir'... "
-    $pgvm_home/environments/current/bin/initdb -D $cluster_dir $initdb_options 1> $pgvm_home/logs/install.$cluster_name@${current}.log 2>$pgvm_home/logs/install.$cluster_name@${current}.error.log
+    ${pgvm_environments}/current/bin/initdb -D $cluster_dir $initdb_options 1> ${pgvm_logs}/install.$cluster_name@${current}.log 2>${pgvm_logs}/install.$cluster_name@${current}.error.log
 
-    [[ $? -ne 0 ]] && echo "error!" && cat $pgvm_home/logs/install.$cluster_name@${current}.error.log && exit 1
+    [[ $? -ne 0 ]] && echo "error!" && cat ${pgvm_logs}/install.$cluster_name@${current}.error.log && exit 1
 
-    last_port=$(find $pgvm_home/clusters -name "postgresql.conf" -exec egrep "port =" {} \; | awk '{ printf $3"\n" ;}' | sort -n | tail -1)
+    last_port=$(find ${pgvm_clusters} -name "postgresql.conf" -exec egrep "port =" {} \; | awk '{ printf $3"\n" ;}' | sort -n | tail -1)
     next_port=$(($last_port + 1))
 
     echo -e "\n# added by 'pgvm' at `date`" >> $cluster_dir/postgresql.conf
@@ -88,7 +88,7 @@ create()
 list()
 {
     current=$(current_version)
-    cluster_top_dir="$pgvm_home/clusters/${current}"
+    cluster_top_dir="${pgvm_clusters}/${current}"
     clusters=$(find ${cluster_top_dir}/* -maxdepth 0 -type d -exec basename {} \; 2> /dev/null)
 
     [[ -z "$clusters" ]] && echo "there is no clusters in current environment (${current})" && exit 1
@@ -130,7 +130,7 @@ status()
 use()
 {
     echo "not implemented" && exit 1
-    cluster_top_dir="$pgvm_home/clusters/$(current_version)"
+    cluster_top_dir="${pgvm_clusters}/$(current_version)"
     cluster_name=${1}
     cluster="${cluster_top_dir}/${cluster_name}"
 
@@ -139,7 +139,7 @@ use()
 
 remove()
 {
-    cluster_top_dir="$pgvm_home/clusters/$(current_version)"
+    cluster_top_dir="${pgvm_clusters}/$(current_version)"
     cluster_name=${1} ; shift
     cluster="${cluster_top_dir}/${cluster_name}"
     rest=${1}
@@ -165,10 +165,10 @@ cluster_ctl()
 {
     action=$1
     cluster_name=$2
-    cluster_top_dir="$pgvm_home/clusters/$(current_version)"
+    cluster_top_dir="${pgvm_clusters}/$(current_version)"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
-    $pgvm_home/environments/current/bin/pg_ctl --silent -w -D $cluster_dir $action || exit 1
+    ${pgvm_environments}/current/bin/pg_ctl --silent -w -D $cluster_dir $action || exit 1
 }
 
 cluster_human_status()
@@ -177,10 +177,10 @@ cluster_human_status()
 
     cluster_name=$1
     cluster_version=${2:-$(current_version)}
-    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
+    cluster_top_dir="${pgvm_clusters}/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
-    $pgvm_home/environments/$cluster_version/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
+    ${pgvm_environments}/$cluster_version/bin/pg_ctl -D $cluster_dir status 1>/dev/null 2>/dev/null && echo "online" || echo "offline"
 }
 
 cluster_port()
@@ -189,7 +189,7 @@ cluster_port()
 
     cluster_name=$1
     cluster_version=${2:-$(current_version)}
-    cluster_top_dir="$pgvm_home/clusters/$cluster_version"
+    cluster_top_dir="${pgvm_clusters}/$cluster_version"
     cluster_dir=${cluster_top_dir}/${cluster_name}
 
     cluster_port=$(egrep "^\s*port\s*=" $cluster_dir/postgresql.conf)

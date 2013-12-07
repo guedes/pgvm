@@ -71,7 +71,7 @@ remove()
   then
 	  echo -e "Removing the following Postgres versions sources and installed by pgvm!\n"
 	  echo -e "$VERSIONS"
-	  rm -rf $pgvm_home/environments/*
+	  rm -rf ${pgvm_environments}/*
     if [ $purge -eq 1 ]
     then
 	    rm -rf $pgvm_home/src/*
@@ -83,7 +83,7 @@ remove()
     current=$(current_version)
     if [ "$current" == "$version" ] && [ $force -eq 1 ]
     then
-      rm -f $pgvm_home/environments/current
+      rm -f ${pgvm_environments}/current
     elif [ "$current" == "$version" ] && [ $force -eq 0 ]
     then
       echo -e "You try to remove the current $current version. Use the --force to remove it!\n"
@@ -91,7 +91,7 @@ remove()
     fi
 
 	  echo -e "Removing Postgres version $version installed and your source by pgvm!\n"
-    rm -rf $pgvm_home/environments/$version
+    rm -rf ${pgvm_environments}/$version
 
     if [ $purge -eq 1 ]
     then

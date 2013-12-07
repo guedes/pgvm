@@ -243,10 +243,10 @@ compile_and_install_postgres()
    fi
 
    cd $pg_dest_dir
-   mkdir -p $pgvm_home/environments/$version
+   mkdir -p ${pgvm_environments}/$version
 
    echo -n "configuring PostgreSQL Version: $version ... "
-   ./configure --prefix=$pgvm_home/environments/$version ${configure_options} --silent
+   ./configure --prefix=${pgvm_environments}/$version ${configure_options} --silent
    echo "done."
 
    echo -n "compiling ... "
@@ -264,7 +264,7 @@ version_is_installed()
 {
    version=${1:-$version}
 
-   [[ -d "${pgvm_home}/environments/$version" ]]
+   [[ -d "${pgvm_environments}/$version" ]]
 }
 
 create_symlinks()
@@ -273,8 +273,8 @@ create_symlinks()
 
    version=${1:-$version}
    # we use short opts to compatibility with OSX
-   mkdir -p $pgvm_home/environments
-   ln -n -f -s $pgvm_home/environments/$version $pgvm_home/environments/current
+   mkdir -p ${pgvm_environments}
+   ln -n -f -s ${pgvm_environments}/$version ${pgvm_environments}/current
    builtin hash -r
 }
 
