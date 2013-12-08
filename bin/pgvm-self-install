@@ -109,9 +109,9 @@ parse_options()
 parse_options $*
 
 pgvm_home=${opt_pgvm_home:-"$HOME/.pgvm"}
-pgvm_logs=${opt_pgvm_logs:-"\${pgvm_home}/logs"}
-pgvm_clusters=${opt_pgvm_clusters:-"\${pgvm_home}/clusters"}
-pgvm_environments=${opt_pgvm_environments:-"\${pgvm_home}/environments"}
+pgvm_logs=${opt_logs_dir:-"\${pgvm_home}/logs"}
+pgvm_clusters=${opt_clusters_dir:-"\${pgvm_home}/clusters"}
+pgvm_environments=${opt_environments_dir:-"\${pgvm_home}/environments"}
 
 echo "PostgreSQL version manager's installer"
 
