@@ -269,12 +269,12 @@ echo "select version()" | pgvm console my_cluster
 echo "select version()" | pgvm console
 #status=0
 #match=/PostgreSQL 9.3.2/
+
 pgvm cluster stop my_cluster
 
 echo "select version()" | pgvm console
 #status=1
 #match=/please, choose a cluster to connect/
-pgvm cluster stop my_cluster
 
 pgvm use 8.4.19
 echo "select version()" | pgvm console test
