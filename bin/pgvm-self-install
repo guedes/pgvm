@@ -22,7 +22,7 @@
 # updates, enhancements, or modifications.
 
 ACTUAL_DIR=`pwd`
-STABLE_VERSION="tags/v0.2.0"
+STABLE_VERSION="tags/v0.2.1"
 
 clone_repo()
 {

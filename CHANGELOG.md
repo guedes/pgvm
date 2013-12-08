@@ -1,13 +1,13 @@
-# v0.2.1-dev
+# v0.2.1 (2013-12-08)
 
 * Enhancements
-  * Allow set the target directory for logs, clusters and environment binaries
+  * Allow set the target directory for logs, clusters and environment binaries by passing `--logs-dir=`, `--clusters-dir=` and `--environments-dir=` options to installer.  
 
 * Bug fixes
-  * Uninstall checked out branches and hashes
+  * Uninstall checked out branches and hashes.
 
 * Deprecations
-  * `--force` is deprecated
+  * `--force` is deprecated.
 
 # v0.2.0 (2013-12-06)
 
