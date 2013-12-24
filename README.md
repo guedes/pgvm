@@ -284,7 +284,7 @@ See the [issue list of enhancements](https://github.com/guedes/pgvm/issues?label
 Origins
 -------
 
-`pgvm` was inspired by [rvm](https://rvm.beginrescueend.com), a Ruby enVironment Manager created by [Wayne E. Seguin](http://wayneseguin.us).
+`pgvm` was inspired by [rvm](https://rvm.io), a Ruby enVironment Manager created by [Wayne E. Seguin](http://wayneseguin.us).
 
 
 Copyright and License
