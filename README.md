@@ -35,7 +35,7 @@ You list all PostgreSQL installed version with the
 action `list`:
 
     $ pgvm list
-    Please, install a PostgreSQL Version!
+    Please install some PostgreSQL version using 'pgvm install'!
 
 As you can see, there isn't any. Lets install one
 using the action `install`:

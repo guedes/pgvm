@@ -18,7 +18,7 @@ export MAKE_OPTS="-j 10"
 
 pgvm list
 #status=0
-#match=/Please, install a PostgreSQL Version!/
+#match=/Please install some PostgreSQL version using 'pgvm install'!/
 
 ## testing install
 

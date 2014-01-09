@@ -45,7 +45,7 @@ current_version()
 current()
 {
     current_version=$(current_version)
-    [[ "$current_version" == "no_version_installed" ]] && echo "Please, install a PostgreSQL Version!" && exit 1
+    [[ "$current_version" == "no_version_installed" ]] && echo "Please install some PostgreSQL version using 'pgvm install'!" && exit 1
 
     echo $current_version
 }
