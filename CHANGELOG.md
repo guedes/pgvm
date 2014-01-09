@@ -1,3 +1,8 @@
+# v0.2.2-dev
+
+* Bug fixes
+  * Fix uninstall to proper purge files.
+
 # v0.2.1 (2013-12-08)
 
 * Enhancements
