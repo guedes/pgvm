@@ -36,6 +36,8 @@ Usage: pgvm action [arguments]
 
     cluster      Manipulate clusters (PGDATA directories)
 
+    contrib      Install PostgreSQL contrib modules
+
     console      Starts psql and connects to a specified cluster
 
     help         This help

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+
+source $pgvm_home/actions/current
+
+usage()
+{
+    echo """
+Manipulates PostgreSQL contribs with pgvm.
+
+Usage: pgvm contrib <action> [ contrib-name | all ]
+
+  - action
+
+    install     Install a crontrib using current version
+
+"""
+}
+
+install() {
+    contrib_name="$(echo "${1}" | awk '{print tolower($0)}')"
+
+    make_dir="${pgvm_home}/src/postgresql-$(current_version)/contrib"
+
+    if [ "${contrib_name}X" = "X" ]; then
+        usage && exit
+    elif [ "${contrib_name}" != "all" ]; then
+        make_dir="${make_dir}/${contrib_name}"
+
+        test_if_exists "${make_dir}" ; status=$? ; [[ ${status} -ne 0 ]] && exit ${status}
+    fi
+
+    ## do the installing
+    cd ${make_dir}
+    if [ ${contrib_name} = "all" ]; then
+        echo "Installing all contribs."
+    else
+        echo "Installing contrib ${contrib_name}."
+    fi
+    
+    make clean 1> make_clean.log 2>&1
+    make 1> make.log 2>&1
+    make install 1> make_install.log 2>&1
+    if [ ${?} -ne 0 ]; then
+        echo "ERROR: Fail to compile contrib. See '"${make_dir}/make_install.log"' for details."
+    fi
+}
+
+contrib() {
+    case $1 in
+        install)
+            install "$2"
+            ;;
+        *) usage  ;;
+    esac
+}
+
+test_if_exists() {
+    if [ ! -d "${1}" ]; then
+        echo "Contrib directory not found! Aborting."
+        exit 2
+    fi
+}
