@@ -289,7 +289,13 @@ check_md5()
 
     case $OSTYPE in
         darwin*)
-                 [[ "$(cat ${pg_file}.md5 | cut -d' ' -f1)" == "$(md5 -r ${pg_file} | cut -d' ' -f1)" ]]
+
+            file_md5=$(cat ${pg_file}.md5 | awk '{print $1}' )
+            if [ $(egrep 'MD5 \(' ${pg_file}.md5  | wc -l) -eq 1 ]; then
+              file_md5=$(cat ${pg_file}.md5 | awk '{print $(NF)}' )
+            fi
+
+                 [[ "$file_md5" == "$(md5 -r ${pg_file} | awk '{print $1}')" ]]
 		 ;;
               *)
                  md5sum -c ${pg_file}.md5 >/dev/null 2>/dev/null
