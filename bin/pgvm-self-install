@@ -38,6 +38,12 @@ clone_repo()
 
 }
 
+copy_repo()
+{
+  from_dir=${1}
+  cp -a $from_dir $pgvm_home
+}
+
 update_repo()
 {
 	cd $pgvm_home
@@ -73,11 +79,12 @@ set_bash_env()
 
   cat > ${pgvm_home}/pgvm_env <<EOF
 pgvm_home=${pgvm_home}
+pgvm_src=${pgvm_src}
 pgvm_logs=${pgvm_logs}
 pgvm_clusters=${pgvm_clusters}
 pgvm_environments=${pgvm_environments}
 
-export pgvm_home pgvm_logs pgvm_environments pgvm_clusters
+export pgvm_home pgvm_src pgvm_logs pgvm_environments pgvm_clusters
 
 export PATH=\${pgvm_home}/bin:\$PATH
 export PATH=\${pgvm_environments}/current/bin:\$PATH
@@ -109,6 +116,7 @@ parse_options()
 parse_options $*
 
 pgvm_home=${opt_pgvm_home:-"$HOME/.pgvm"}
+pgvm_src=${opt_pgvm_src:-"\${pgvm_home}/src"}
 pgvm_logs=${opt_logs_dir:-"\${pgvm_home}/logs"}
 pgvm_clusters=${opt_clusters_dir:-"\${pgvm_home}/clusters"}
 pgvm_environments=${opt_environments_dir:-"\${pgvm_home}/environments"}
@@ -128,7 +136,12 @@ then
 		exit 1
 	fi
 else
+	if [ -n $opt_from_dir ]
+	then
+		copy_repo $opt_from_dir
+	else
 		clone_repo
+	fi
 fi
 
 set_bash_env
