@@ -136,7 +136,7 @@ then
 		exit 1
 	fi
 else
-	if [ -n $opt_from_dir ]
+	if [ -n "$opt_from_dir" ]
 	then
 		copy_repo $opt_from_dir
 	else
