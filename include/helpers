@@ -319,3 +319,8 @@ load_conf()
         fi
     done
 }
+
+list_last()
+{
+	version=$(pgvm list|sed s/.\=\>//|egrep ${version}|sort | tail -n1)
+}

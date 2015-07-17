@@ -21,6 +21,8 @@
 # and Dickson S. Guedes has no obligations to provide maintenance, support,
 # updates, enhancements, or modifications.
 
+source $pgvm_home/include/sites
+
 usage()
 {
 	echo """
@@ -41,8 +43,17 @@ TIP: you can use 'pgvm list' to see the PostgreSQL
 use()
 {
 	version=$1
-	[[ "x$version" == "x" ]] && usage && exit
+	if [[ $(echo ${#version}) -eq 3 ]]
+	then
+		list_last
+	elif [[ $(echo ${#version}) -eq 1 \
+		&& $(pgvm list|sed s/.\=\>//|cut -d "." -f 1|egrep ${version}) ]] 
+	then
+	    list_last
+	fi
 
+	[[ "x$version" == "x" ]] && usage && exit 1
+	
 	version_is_installed $version && create_symlinks || {
 		echo "version $version is not installed"
 		exit 1
