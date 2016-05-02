@@ -28,7 +28,9 @@ clone_repo()
 {
   echo
   echo -n "wait while the installer fetches pgvm's files ..."
-  git clone git://github.com/guedes/pgvm.git $pgvm_home > /dev/null 2>&1 || {
+  git clone   git://github.com/guedes/pgvm.git $pgvm_home > /dev/null 2>&1 ||
+  git clone     git@github.com:guedes/pgvm.git $pgvm_home > /dev/null 2>&1 ||
+  git clone https://github.com/guedes/pgvm.git $pgvm_home > /dev/null 2>&1 || {
     echo "sorry, pgvm could not be installed" && exit 1
   }
 
